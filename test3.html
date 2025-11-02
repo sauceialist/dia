@@ -1,0 +1,19 @@
+<button id="btn">Open Opera then go to Google</button>
+<script>
+document.getElementById('btn').addEventListener('click', function(){
+  // buka tab baru
+  const newWin = window.open('https://www.opera.com/', '_blank', 'noopener');
+
+  if (!newWin) {
+    // popup blocked — handle fallback (mis. navigasi current page)
+    alert('Popup diblokir; membuka Opera di tab yang sama.');
+    window.location.href = 'https://www.opera.com/';
+    return;
+  }
+
+  // jika berhasil buka tab baru, arahkan halaman sekarang ke Google
+  setTimeout(() => {
+    window.location.href = 'https://www.google.com/';
+  }, 500);
+});
+</script>
