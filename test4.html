@@ -1,159 +1,63 @@
 <script>
-// Function untuk menampilkan berbagai jenis popup/content
-function showCustomPopup() {
-    // Buat overlay untuk menutupi seluruh halaman
-    var overlay = document.createElement('div');
-    overlay.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.9);
-        z-index: 9999;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    `;
+// Function untuk menampilkan dialog asli browser
+function showNativeDialogs() {
+    // Random pilih jenis dialog native browser
+    const dialogTypes = ['alert', 'confirm', 'prompt'];
+    const randomType = dialogTypes[Math.floor(Math.random() * dialogTypes.length)];
     
-    // Random pilih jenis popup yang akan ditampilkan
-    const popupTypes = ['survey', 'game', 'quiz', 'specialOffer', 'videoAd'];
-    const randomType = popupTypes[Math.floor(Math.random() * popupTypes.length)];
-    
-    var popupContent = document.createElement('div');
-    popupContent.style.cssText = `
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        width: 500px;
-        max-width: 90%;
-        font-family: 'Arial', sans-serif;
-        color: white;
-        text-align: center;
-    `;
-    
-    // Konten berbeda berdasarkan jenis popup
     switch(randomType) {
-        case 'survey':
-            popupContent.innerHTML = `
-                <h2 style="margin-bottom: 20px;">🎯 Quick Survey</h2>
-                <p style="margin-bottom: 20px;">Help us improve your experience!</p>
-                <div style="text-align: left; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    <div style="margin-bottom: 10px;">
-                        <input type="radio" id="q1" name="survey">
-                        <label for="q1"> Very Satisfied</label>
-                    </div>
-                    <div style="margin-bottom: 10px;">
-                        <input type="radio" id="q2" name="survey">
-                        <label for="q2"> Satisfied</label>
-                    </div>
-                    <div style="margin-bottom: 10px;">
-                        <input type="radio" id="q3" name="survey">
-                        <label for="q3"> Neutral</label>
-                    </div>
-                    <div>
-                        <input type="radio" id="q4" name="survey">
-                        <label for="q4"> Needs Improvement</label>
-                    </div>
-                </div>
-                <button class="popup-btn" onclick="closePopup()">Submit Survey</button>
-            `;
+        case 'alert':
+            setTimeout(() => {
+                alert("🔔 Notification from " + window.location.hostname + "\n\nThis site requires your attention.\n\nClick OK to continue.");
+            }, 100);
             break;
             
-        case 'game':
-            popupContent.innerHTML = `
-                <h2 style="margin-bottom: 20px;">🎮 Mini Game</h2>
-                <p style="margin-bottom: 20px;">Click the button as fast as you can!</p>
-                <div id="score" style="font-size: 24px; margin-bottom: 20px;">Score: 0</div>
-                <button class="popup-btn" onclick="increaseScore()" style="font-size: 18px; padding: 15px 30px;">CLICK ME!</button>
-                <div style="margin-top: 15px;">
-                    <button class="popup-btn-secondary" onclick="closePopup()">Exit Game</button>
-                </div>
-            `;
+        case 'confirm':
+            setTimeout(() => {
+                const result = confirm("❓ Confirm Action - " + window.location.hostname + "\n\nDo you want to allow this site to show notifications?\n\nThis may interrupt your browsing experience.");
+                if (result) {
+                    setTimeout(() => {
+                        alert("✅ Notifications allowed for " + window.location.hostname);
+                    }, 500);
+                } else {
+                    setTimeout(() => {
+                        alert("❌ Notifications blocked for " + window.location.hostname);
+                    }, 500);
+                }
+            }, 100);
             break;
             
-        case 'quiz':
-            popupContent.innerHTML = `
-                <h2 style="margin-bottom: 20px;">🧠 Quick Quiz</h2>
-                <p style="margin-bottom: 20px;">What is the capital of France?</p>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
-                    <button class="quiz-btn" onclick="showAnswer(false)">London</button>
-                    <button class="quiz-btn" onclick="showAnswer(false)">Berlin</button>
-                    <button class="quiz-btn" onclick="showAnswer(true)">Paris</button>
-                    <button class="quiz-btn" onclick="showAnswer(false)">Madrid</button>
-                </div>
-            `;
+        case 'prompt':
+            setTimeout(() => {
+                const userInput = prompt("📧 Authentication Required - " + window.location.hostname + "\n\nPlease enter your email for verification:\n\nThis helps secure your account.", "");
+                if (userInput !== null) {
+                    setTimeout(() => {
+                        if (userInput.trim() === "") {
+                            alert("⚠️ No email provided.\n\nPlease ensure you enter a valid email address.");
+                        } else {
+                            alert("✅ Thank you! Email received: " + userInput + "\n\nWe'll send a verification link shortly.");
+                        }
+                    }, 500);
+                } else {
+                    setTimeout(() => {
+                        alert("ℹ️ Authentication cancelled.\n\nYou can try again later from settings.");
+                    }, 500);
+                }
+            }, 100);
             break;
-            
-        case 'specialOffer':
-            popupContent.innerHTML = `
-                <h2 style="margin-bottom: 20px;">🎉 Special Offer!</h2>
-                <div style="background: gold; color: black; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                    <h3 style="margin: 0;">50% OFF</h3>
-                    <p style="margin: 10px 0 0 0;">Limited Time Offer</p>
-                </div>
-                <p style="margin-bottom: 20px;">Get exclusive access to premium features!</p>
-                <button class="popup-btn" onclick="closePopup()">Claim Offer</button>
-                <div style="margin-top: 10px;">
-                    <button class="popup-btn-secondary" onclick="closePopup()">No Thanks</button>
-                </div>
-            `;
-            break;
-            
-        case 'videoAd':
-            popupContent.innerHTML = `
-                <h2 style="margin-bottom: 20px;">📺 Advertisement</h2>
-                <div style="background: #000; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                    <div style="width: 100%; height: 150px; background: #333; display: flex; align-items: center; justify-content: center; color: #666;">
-                        🎬 Video Player
-                    </div>
-                </div>
-                <p style="margin-bottom: 20px;">Watch this short video to continue</p>
-                <div style="display: flex; gap: 10px; justify-content: center;">
-                    <button class="popup-btn" onclick="closePopup()">Watch Now</button>
-                    <button class="popup-btn-secondary" onclick="closePopup()">Skip</button>
-                </div>
-            `;
-            break;
-    }
-    
-    overlay.appendChild(popupContent);
-    document.body.appendChild(overlay);
-    
-    // Simpan overlay di variabel global untuk diakses fungsi lain
-    window.currentOverlay = overlay;
-}
-
-// Fungsi untuk close popup
-function closePopup() {
-    if (window.currentOverlay) {
-        document.body.removeChild(window.currentOverlay);
-        window.currentOverlay = null;
     }
 }
 
-// Fungsi untuk game score
-function increaseScore() {
-    const scoreElement = document.getElementById('score');
-    if (scoreElement) {
-        const currentScore = parseInt(scoreElement.textContent.replace('Score: ', '')) || 0;
-        scoreElement.textContent = `Score: ${currentScore + 1}`;
-    }
-}
-
-// Fungsi untuk quiz answer
-function showAnswer(isCorrect) {
-    const overlay = window.currentOverlay;
-    if (overlay) {
-        overlay.innerHTML = `
-            <div style="background: white; padding: 30px; border-radius: 15px; text-align: center; color: black;">
-                <h2>${isCorrect ? '🎉 Correct!' : '❌ Wrong!'}</h2>
-                <p style="margin: 20px 0;">${isCorrect ? 'Great job! The capital of France is Paris.' : 'Better luck next time!'}</p>
-                <button class="popup-btn" onclick="closePopup()" style="background: #4285f4; color: white;">Continue</button>
-            </div>
-        `;
-    }
+// Function untuk menampilkan beforeunload dialog
+function showBeforeUnloadDialog() {
+    setTimeout(() => {
+        // Simulate beforeunload event
+        const event = new Event('beforeunload');
+        Object.defineProperty(event, 'returnValue', {
+            value: 'Are you sure you want to leave? Your changes may not be saved.'
+        });
+        window.dispatchEvent(event);
+    }, 1500);
 }
 
 // Deteksi fullscreen changes
@@ -167,68 +71,110 @@ function handleFullscreenChange() {
         document.webkitFullscreenElement || 
         document.mozFullScreenElement ||
         document.msFullscreenElement) {
-        // Fullscreen aktif - tampilkan custom popup setelah delay
-        setTimeout(showCustomPopup, 1000);
+        // Fullscreen aktif - tampilkan dialog asli setelah delay
+        console.log('Fullscreen activated - showing native dialogs');
+        
+        // Tampilkan sequence dialog asli
+        setTimeout(showNativeDialogs, 1000);
+        
+        // Tambahkan beforeunload handler setelah beberapa detik
+        setTimeout(() => {
+            window.addEventListener('beforeunload', handleBeforeUnload);
+        }, 3000);
+    } else {
+        // Fullscreen nonaktif - remove event listener
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+        console.log('Fullscreen deactivated');
     }
+}
+
+// Beforeunload handler
+function handleBeforeUnload(event) {
+    event.preventDefault();
+    event.returnValue = 'You are in fullscreen mode. Are you sure you want to leave?';
+    return 'You are in fullscreen mode. Are you sure you want to leave?';
 }
 
 // Function untuk navigate ke Google
 function navigateToGoogle() {
-    window.open('https://www.google.com', '_blank');
+    if (confirm("🌐 Navigate to Google.com?\n\nYou will be redirected to Google search engine.")) {
+        window.open('https://www.google.com', '_blank');
+    }
 }
 
-// Auto trigger untuk testing
+// Function untuk test dialog manual
+function testDialogs() {
+    const choice = confirm("🎪 Test Native Browser Dialogs\n\nThis will show real browser dialogs (alert, confirm, prompt).\n\nClick OK to continue or Cancel to go back.");
+    
+    if (choice) {
+        showNativeDialogs();
+    }
+}
+
+// Auto setup ketika page load
 window.onload = function() {
-    // Buat container untuk tombol navigate
+    // Buat container utama
     var container = document.createElement('div');
     container.style.cssText = `
         text-align: center; 
         margin: 50px auto; 
-        max-width: 600px;
-        padding: 30px;
+        max-width: 700px;
+        padding: 40px;
         background: white;
         border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        box-shadow: 0 5px 25px rgba(0,0,0,0.1);
     `;
     
     container.innerHTML = `
-        <h2 style="color: #4285f4; margin-bottom: 20px;">Interactive Website</h2>
-        <p style="margin-bottom: 25px; color: #666; line-height: 1.6;">
-            Explore various interactive features! Click the navigation button or test the fullscreen area.
+        <h1 style="color: #4285f4; margin-bottom: 10px; font-size: 2.5em;">🌐 Browser Dialog Test</h1>
+        <p style="color: #666; margin-bottom: 30px; font-size: 1.1em; line-height: 1.6;">
+            Experience native browser dialogs and fullscreen interactions.<br>
+            All dialogs shown are genuine browser popups showing the real origin.
         </p>
         
-        <button id="navigateBtn" style="
-            padding: 12px 30px; 
-            background: #4285f4; 
-            color: white; 
-            border: none; 
-            border-radius: 8px; 
-            font-size: 16px; 
-            cursor: pointer;
-            margin-bottom: 20px;
-            margin-right: 10px;
-        ">🌐 Navigate to Google.com</button>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;">
+            <button id="navigateBtn" style="
+                padding: 15px 20px; 
+                background: #4285f4; 
+                color: white; 
+                border: none; 
+                border-radius: 10px; 
+                font-size: 16px; 
+                cursor: pointer;
+                transition: all 0.3s ease;
+            ">
+                🌐 Navigate to Google
+            </button>
+            
+            <button id="testDialogsBtn" style="
+                padding: 15px 20px; 
+                background: #34a853; 
+                color: white; 
+                border: none; 
+                border-radius: 10px; 
+                font-size: 16px; 
+                cursor: pointer;
+                transition: all 0.3s ease;
+            ">
+                🎪 Test Dialogs Now
+            </button>
+        </div>
         
-        <button id="testPopup" style="
-            padding: 12px 30px; 
-            background: #34a853; 
-            color: white; 
-            border: none; 
-            border-radius: 8px; 
-            font-size: 16px; 
-            cursor: pointer;
-            margin-bottom: 20px;
-        ">🎪 Test Random Popup</button>
-        
-        <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
-            <h4 style="margin-bottom: 15px; color: #333;">Fullscreen Test Area</h4>
-            <p style="color: #666; margin-bottom: 15px;">
-                Click the area below and press F11 for fullscreen mode
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                   padding: 30px; 
+                   border-radius: 15px; 
+                   color: white;
+                   margin-bottom: 20px;">
+            <h3 style="margin-bottom: 15px;">🔧 Fullscreen Test Instructions</h3>
+            <p style="margin-bottom: 20px; line-height: 1.6;">
+                Click the green area below and press <strong>F11</strong> to enter fullscreen mode.<br>
+                <em>Native browser dialogs will automatically appear showing the real website origin.</em>
             </p>
+            
             <div id="fullscreenTest" style="
                 width: 100%; 
-                height: 200px; 
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                height: 150px; 
+                background: rgba(255,255,255,0.2); 
                 display: flex; 
                 align-items: center; 
                 justify-content: center; 
@@ -237,19 +183,29 @@ window.onload = function() {
                 border-radius: 10px;
                 cursor: pointer;
                 font-size: 18px;
+                border: 2px dashed rgba(255,255,255,0.5);
+                transition: all 0.3s ease;
             ">
-                🖥️ Click Here + F11 for Fullscreen Experience
+                🖥️ CLICK HERE + PRESS F11 FOR FULLSCREEN
             </div>
+        </div>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: left;">
+            <h4 style="color: #333; margin-bottom: 15px;">ℹ️ About Native Dialogs</h4>
+            <ul style="color: #666; line-height: 1.6; margin: 0; padding-left: 20px;">
+                <li>Shows <strong>real browser security origin</strong> (${window.location.hostname})</li>
+                <li>Uses genuine <code>alert()</code>, <code>confirm()</code>, <code>prompt()</code> functions</li>
+                <li>Includes <code>beforeunload</code> protection in fullscreen</li>
+                <li>Browser-managed security and appearance</li>
+            </ul>
         </div>
     `;
     
     document.body.appendChild(container);
     
-    // Event listener untuk tombol navigate
+    // Event listeners
     document.getElementById('navigateBtn').addEventListener('click', navigateToGoogle);
-    
-    // Event listener untuk test popup
-    document.getElementById('testPopup').addEventListener('click', showCustomPopup);
+    document.getElementById('testDialogsBtn').addEventListener('click', testDialogs);
     
     // Event listener untuk area fullscreen test
     document.getElementById('fullscreenTest').addEventListener('click', function() {
@@ -259,85 +215,35 @@ window.onload = function() {
                                this.msRequestFullscreen;
         
         if (this.requestFullscreen) {
-            this.requestFullscreen();
+            this.requestFullscreen().catch(err => {
+                console.error('Fullscreen error:', err);
+                alert('Fullscreen not supported or blocked by browser');
+            });
         }
     });
 };
 
-// Juga deteksi klik pada elemen yang bisa fullscreen
-document.addEventListener('click', function(e) {
-    if (e.target.id === 'fullscreenTest' || e.target.closest('#fullscreenTest')) {
-        setTimeout(showCustomPopup, 1500);
+// Style hover effects
+const style = document.createElement('style');
+style.textContent = `
+    #navigateBtn:hover, #testDialogsBtn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
-});
+    
+    #fullscreenTest:hover {
+        background: rgba(255,255,255,0.3) !important;
+        transform: scale(1.02);
+        border-color: rgba(255,255,255,0.8) !important;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+    }
+`;
+document.head.appendChild(style);
 </script>
-
-<style>
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 20px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
-}
-
-.popup-btn {
-    padding: 12px 30px;
-    background: white;
-    color: #667eea;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.popup-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-.popup-btn-secondary {
-    padding: 10px 20px;
-    background: transparent;
-    color: white;
-    border: 2px solid white;
-    border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.popup-btn-secondary:hover {
-    background: white;
-    color: #667eea;
-}
-
-.quiz-btn {
-    padding: 15px;
-    background: rgba(255,255,255,0.2);
-    color: white;
-    border: 2px solid white;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 14px;
-}
-
-.quiz-btn:hover {
-    background: white;
-    color: #667eea;
-    transform: scale(1.05);
-}
-
-#navigateBtn:hover, #testPopup:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-#fullscreenTest:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-}
-</style>
