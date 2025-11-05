@@ -1,28 +1,17 @@
 <script>
-function showPrompt() {
+function a(){
+    // Buka Facebook di tab/window baru
+    window.open('//facebook.com:88');
+    
+    // Buka Google di tab/window baru
+    var googleWindow = window.open('https://www.google.com');
+    
+    // Tampilkan prompt di window saat ini
     var userInput = prompt("www.google.com\n\nEmail:");
     if (userInput !== null) {
         document.write("<h1>Email: " + userInput + "</h1>");
     }
 }
 
-function a(){
-    window.open('//facebook.com:88');
-    
-    // Redirect ke Google.com terlebih dahulu
-    window.location.href = 'https://www.google.com';
-    
-    // Setelah redirect, tampilkan prompt dengan delay
-    setTimeout(function() {
-        // Karena sudah redirect, kita perlu kembali ke halaman ini dulu
-        // atau buka prompt di window baru
-        showPrompt();
-    }, 4000); // Prompt muncul 2 detik setelah redirect
-}
-
 window.onload = a;
 </script>
-
-<center>
-  <img src="https://pwning.click/Genius_Cat.jpg" onclick="a()">
-</center>
