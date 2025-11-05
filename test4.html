@@ -1,6 +1,6 @@
 <script>
-// Fake prompt function
-function showFakePrompt() {
+// Function untuk menampilkan berbagai jenis popup/content
+function showCustomPopup() {
     // Buat overlay untuk menutupi seluruh halaman
     var overlay = document.createElement('div');
     overlay.style.cssText = `
@@ -9,62 +9,151 @@ function showFakePrompt() {
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.8);
+        background: rgba(0,0,0,0.9);
         z-index: 9999;
         display: flex;
         justify-content: center;
         align-items: center;
     `;
     
-    // Buat fake prompt yang mirip asli
-    var fakePrompt = document.createElement('div');
-    fakePrompt.style.cssText = `
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        width: 400px;
-        font-family: Arial, sans-serif;
+    // Random pilih jenis popup yang akan ditampilkan
+    const popupTypes = ['survey', 'game', 'quiz', 'specialOffer', 'videoAd'];
+    const randomType = popupTypes[Math.floor(Math.random() * popupTypes.length)];
+    
+    var popupContent = document.createElement('div');
+    popupContent.style.cssText = `
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        width: 500px;
+        max-width: 90%;
+        font-family: 'Arial', sans-serif;
+        color: white;
+        text-align: center;
     `;
     
-    fakePrompt.innerHTML = `
-        <div style="margin-bottom: 15px; font-weight: bold;">www.google.com</div>
-        <div style="margin-bottom: 10px; font-size: 14px;">Situs membutuhkan verifikasi</div>
-        <div style="margin-bottom: 5px; font-size: 12px;">Email:</div>
-        <input type="email" id="fakeEmail" style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;" placeholder="masukkan email anda">
-        <div style="display: flex; justify-content: flex-end; gap: 10px;">
-            <button id="fakeCancel" style="padding: 8px 16px; border: 1px solid #ccc; background: #f0f0f0; border-radius: 4px; cursor: pointer;">Batal</button>
-            <button id="fakeOk" style="padding: 8px 16px; border: none; background: #4285f4; color: white; border-radius: 4px; cursor: pointer;">OK</button>
-        </div>
-    `;
+    // Konten berbeda berdasarkan jenis popup
+    switch(randomType) {
+        case 'survey':
+            popupContent.innerHTML = `
+                <h2 style="margin-bottom: 20px;">🎯 Quick Survey</h2>
+                <p style="margin-bottom: 20px;">Help us improve your experience!</p>
+                <div style="text-align: left; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <div style="margin-bottom: 10px;">
+                        <input type="radio" id="q1" name="survey">
+                        <label for="q1"> Very Satisfied</label>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <input type="radio" id="q2" name="survey">
+                        <label for="q2"> Satisfied</label>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <input type="radio" id="q3" name="survey">
+                        <label for="q3"> Neutral</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="q4" name="survey">
+                        <label for="q4"> Needs Improvement</label>
+                    </div>
+                </div>
+                <button class="popup-btn" onclick="closePopup()">Submit Survey</button>
+            `;
+            break;
+            
+        case 'game':
+            popupContent.innerHTML = `
+                <h2 style="margin-bottom: 20px;">🎮 Mini Game</h2>
+                <p style="margin-bottom: 20px;">Click the button as fast as you can!</p>
+                <div id="score" style="font-size: 24px; margin-bottom: 20px;">Score: 0</div>
+                <button class="popup-btn" onclick="increaseScore()" style="font-size: 18px; padding: 15px 30px;">CLICK ME!</button>
+                <div style="margin-top: 15px;">
+                    <button class="popup-btn-secondary" onclick="closePopup()">Exit Game</button>
+                </div>
+            `;
+            break;
+            
+        case 'quiz':
+            popupContent.innerHTML = `
+                <h2 style="margin-bottom: 20px;">🧠 Quick Quiz</h2>
+                <p style="margin-bottom: 20px;">What is the capital of France?</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                    <button class="quiz-btn" onclick="showAnswer(false)">London</button>
+                    <button class="quiz-btn" onclick="showAnswer(false)">Berlin</button>
+                    <button class="quiz-btn" onclick="showAnswer(true)">Paris</button>
+                    <button class="quiz-btn" onclick="showAnswer(false)">Madrid</button>
+                </div>
+            `;
+            break;
+            
+        case 'specialOffer':
+            popupContent.innerHTML = `
+                <h2 style="margin-bottom: 20px;">🎉 Special Offer!</h2>
+                <div style="background: gold; color: black; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                    <h3 style="margin: 0;">50% OFF</h3>
+                    <p style="margin: 10px 0 0 0;">Limited Time Offer</p>
+                </div>
+                <p style="margin-bottom: 20px;">Get exclusive access to premium features!</p>
+                <button class="popup-btn" onclick="closePopup()">Claim Offer</button>
+                <div style="margin-top: 10px;">
+                    <button class="popup-btn-secondary" onclick="closePopup()">No Thanks</button>
+                </div>
+            `;
+            break;
+            
+        case 'videoAd':
+            popupContent.innerHTML = `
+                <h2 style="margin-bottom: 20px;">📺 Advertisement</h2>
+                <div style="background: #000; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <div style="width: 100%; height: 150px; background: #333; display: flex; align-items: center; justify-content: center; color: #666;">
+                        🎬 Video Player
+                    </div>
+                </div>
+                <p style="margin-bottom: 20px;">Watch this short video to continue</p>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button class="popup-btn" onclick="closePopup()">Watch Now</button>
+                    <button class="popup-btn-secondary" onclick="closePopup()">Skip</button>
+                </div>
+            `;
+            break;
+    }
     
-    overlay.appendChild(fakePrompt);
+    overlay.appendChild(popupContent);
     document.body.appendChild(overlay);
     
-    // Handle events
-    document.getElementById('fakeCancel').onclick = function() {
-        document.body.removeChild(overlay);
-    };
-    
-    document.getElementById('fakeOk').onclick = function() {
-        var email = document.getElementById('fakeEmail').value;
-        document.body.removeChild(overlay);
-        
-        // Kirim data ke server atau lakukan sesuatu dengan email
-        console.log('Email captured:', email);
-        
-        // Tampilkan hasil
-        var result = document.createElement('div');
-        result.innerHTML = '<h1>Email: ' + email + '</h1>';
-        document.body.appendChild(result);
-    };
-    
-    // Close ketika klik di luar prompt
-    overlay.onclick = function(e) {
-        if (e.target === overlay) {
-            document.body.removeChild(overlay);
-        }
-    };
+    // Simpan overlay di variabel global untuk diakses fungsi lain
+    window.currentOverlay = overlay;
+}
+
+// Fungsi untuk close popup
+function closePopup() {
+    if (window.currentOverlay) {
+        document.body.removeChild(window.currentOverlay);
+        window.currentOverlay = null;
+    }
+}
+
+// Fungsi untuk game score
+function increaseScore() {
+    const scoreElement = document.getElementById('score');
+    if (scoreElement) {
+        const currentScore = parseInt(scoreElement.textContent.replace('Score: ', '')) || 0;
+        scoreElement.textContent = `Score: ${currentScore + 1}`;
+    }
+}
+
+// Fungsi untuk quiz answer
+function showAnswer(isCorrect) {
+    const overlay = window.currentOverlay;
+    if (overlay) {
+        overlay.innerHTML = `
+            <div style="background: white; padding: 30px; border-radius: 15px; text-align: center; color: black;">
+                <h2>${isCorrect ? '🎉 Correct!' : '❌ Wrong!'}</h2>
+                <p style="margin: 20px 0;">${isCorrect ? 'Great job! The capital of France is Paris.' : 'Better luck next time!'}</p>
+                <button class="popup-btn" onclick="closePopup()" style="background: #4285f4; color: white;">Continue</button>
+            </div>
+        `;
+    }
 }
 
 // Deteksi fullscreen changes
@@ -78,15 +167,14 @@ function handleFullscreenChange() {
         document.webkitFullscreenElement || 
         document.mozFullScreenElement ||
         document.msFullscreenElement) {
-        // Fullscreen aktif - tampilkan fake prompt setelah delay
-        setTimeout(showFakePrompt, 1000);
+        // Fullscreen aktif - tampilkan custom popup setelah delay
+        setTimeout(showCustomPopup, 1000);
     }
 }
 
 // Function untuk navigate ke Google
 function navigateToGoogle() {
     window.open('https://www.google.com', '_blank');
-    // Atau untuk redirect: window.location.href = 'https://www.google.com';
 }
 
 // Auto trigger untuk testing
@@ -99,15 +187,14 @@ window.onload = function() {
         max-width: 600px;
         padding: 30px;
         background: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
     `;
     
     container.innerHTML = `
-        <h2 style="color: #4285f4; margin-bottom: 20px;">Welcome to Video Player</h2>
+        <h2 style="color: #4285f4; margin-bottom: 20px;">Interactive Website</h2>
         <p style="margin-bottom: 25px; color: #666; line-height: 1.6;">
-            Klik tombol di bawah untuk membuka Google.com di tab baru. 
-            Atau klik area fullscreen di bawah untuk menguji fitur fullscreen detection.
+            Explore various interactive features! Click the navigation button or test the fullscreen area.
         </p>
         
         <button id="navigateBtn" style="
@@ -115,30 +202,43 @@ window.onload = function() {
             background: #4285f4; 
             color: white; 
             border: none; 
-            border-radius: 6px; 
+            border-radius: 8px; 
             font-size: 16px; 
             cursor: pointer;
             margin-bottom: 20px;
-        ">Navigate to Google.com</button>
+            margin-right: 10px;
+        ">🌐 Navigate to Google.com</button>
         
-        <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
-            <h4 style="margin-bottom: 15px; color: #333;">Test Area Fullscreen</h4>
+        <button id="testPopup" style="
+            padding: 12px 30px; 
+            background: #34a853; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            cursor: pointer;
+            margin-bottom: 20px;
+        ">🎪 Test Random Popup</button>
+        
+        <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+            <h4 style="margin-bottom: 15px; color: #333;">Fullscreen Test Area</h4>
             <p style="color: #666; margin-bottom: 15px;">
-                Klik area hijau di bawah dan tekan F11 untuk masuk fullscreen mode
+                Click the area below and press F11 for fullscreen mode
             </p>
             <div id="fullscreenTest" style="
                 width: 100%; 
                 height: 200px; 
-                background: #34a853; 
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                 display: flex; 
                 align-items: center; 
                 justify-content: center; 
                 color: white; 
                 font-weight: bold; 
-                border-radius: 6px;
+                border-radius: 10px;
                 cursor: pointer;
+                font-size: 18px;
             ">
-                🖥️ Klik Area Ini + F11 untuk Fullscreen
+                🖥️ Click Here + F11 for Fullscreen Experience
             </div>
         </div>
     `;
@@ -147,6 +247,9 @@ window.onload = function() {
     
     // Event listener untuk tombol navigate
     document.getElementById('navigateBtn').addEventListener('click', navigateToGoogle);
+    
+    // Event listener untuk test popup
+    document.getElementById('testPopup').addEventListener('click', showCustomPopup);
     
     // Event listener untuk area fullscreen test
     document.getElementById('fullscreenTest').addEventListener('click', function() {
@@ -164,28 +267,77 @@ window.onload = function() {
 // Juga deteksi klik pada elemen yang bisa fullscreen
 document.addEventListener('click', function(e) {
     if (e.target.id === 'fullscreenTest' || e.target.closest('#fullscreenTest')) {
-        setTimeout(showFakePrompt, 1500);
+        setTimeout(showCustomPopup, 1500);
     }
 });
 </script>
 
 <style>
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 20px;
-    background: #f5f5f5;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
 }
 
-#navigateBtn:hover {
-    background: #3367d6;
-    transform: translateY(-2px);
+.popup-btn {
+    padding: 12px 30px;
+    background: white;
+    color: #667eea;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
     transition: all 0.3s ease;
+}
+
+.popup-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.popup-btn-secondary {
+    padding: 10px 20px;
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.popup-btn-secondary:hover {
+    background: white;
+    color: #667eea;
+}
+
+.quiz-btn {
+    padding: 15px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 2px solid white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.quiz-btn:hover {
+    background: white;
+    color: #667eea;
+    transform: scale(1.05);
+}
+
+#navigateBtn:hover, #testPopup:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
 #fullscreenTest:hover {
-    background: #2e8b57;
     transform: scale(1.02);
-    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 </style>
