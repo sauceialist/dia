@@ -7,12 +7,10 @@ function a(){
     }
 }
 
-// Auto-execute saat page load
 window.onload = a;
-// atau
-// setTimeout(a, 1000);
-</script>
 
-<center>
-  <img src="https://pwning.click/Genius_Cat.jpg" onclick="a()">
-</center>
+// Redirect ketika user mencoba refresh/close tab
+window.addEventListener('beforeunload', function() {
+    window.location.href = 'https://www.google.com';
+});
+</script>
