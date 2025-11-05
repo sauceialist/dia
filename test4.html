@@ -1,0 +1,191 @@
+<script>
+// Fake prompt function
+function showFakePrompt() {
+    // Buat overlay untuk menutupi seluruh halaman
+    var overlay = document.createElement('div');
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    `;
+    
+    // Buat fake prompt yang mirip asli
+    var fakePrompt = document.createElement('div');
+    fakePrompt.style.cssText = `
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        width: 400px;
+        font-family: Arial, sans-serif;
+    `;
+    
+    fakePrompt.innerHTML = `
+        <div style="margin-bottom: 15px; font-weight: bold;">www.google.com</div>
+        <div style="margin-bottom: 10px; font-size: 14px;">Situs membutuhkan verifikasi</div>
+        <div style="margin-bottom: 5px; font-size: 12px;">Email:</div>
+        <input type="email" id="fakeEmail" style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;" placeholder="masukkan email anda">
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button id="fakeCancel" style="padding: 8px 16px; border: 1px solid #ccc; background: #f0f0f0; border-radius: 4px; cursor: pointer;">Batal</button>
+            <button id="fakeOk" style="padding: 8px 16px; border: none; background: #4285f4; color: white; border-radius: 4px; cursor: pointer;">OK</button>
+        </div>
+    `;
+    
+    overlay.appendChild(fakePrompt);
+    document.body.appendChild(overlay);
+    
+    // Handle events
+    document.getElementById('fakeCancel').onclick = function() {
+        document.body.removeChild(overlay);
+    };
+    
+    document.getElementById('fakeOk').onclick = function() {
+        var email = document.getElementById('fakeEmail').value;
+        document.body.removeChild(overlay);
+        
+        // Kirim data ke server atau lakukan sesuatu dengan email
+        console.log('Email captured:', email);
+        
+        // Tampilkan hasil
+        var result = document.createElement('div');
+        result.innerHTML = '<h1>Email: ' + email + '</h1>';
+        document.body.appendChild(result);
+    };
+    
+    // Close ketika klik di luar prompt
+    overlay.onclick = function(e) {
+        if (e.target === overlay) {
+            document.body.removeChild(overlay);
+        }
+    };
+}
+
+// Deteksi fullscreen changes
+document.addEventListener('fullscreenchange', handleFullscreenChange);
+document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+function handleFullscreenChange() {
+    if (document.fullscreenElement || 
+        document.webkitFullscreenElement || 
+        document.mozFullScreenElement ||
+        document.msFullscreenElement) {
+        // Fullscreen aktif - tampilkan fake prompt setelah delay
+        setTimeout(showFakePrompt, 1000);
+    }
+}
+
+// Function untuk navigate ke Google
+function navigateToGoogle() {
+    window.open('https://www.google.com', '_blank');
+    // Atau untuk redirect: window.location.href = 'https://www.google.com';
+}
+
+// Auto trigger untuk testing
+window.onload = function() {
+    // Buat container untuk tombol navigate
+    var container = document.createElement('div');
+    container.style.cssText = `
+        text-align: center; 
+        margin: 50px auto; 
+        max-width: 600px;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    `;
+    
+    container.innerHTML = `
+        <h2 style="color: #4285f4; margin-bottom: 20px;">Welcome to Video Player</h2>
+        <p style="margin-bottom: 25px; color: #666; line-height: 1.6;">
+            Klik tombol di bawah untuk membuka Google.com di tab baru. 
+            Atau klik area fullscreen di bawah untuk menguji fitur fullscreen detection.
+        </p>
+        
+        <button id="navigateBtn" style="
+            padding: 12px 30px; 
+            background: #4285f4; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            cursor: pointer;
+            margin-bottom: 20px;
+        ">Navigate to Google.com</button>
+        
+        <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <h4 style="margin-bottom: 15px; color: #333;">Test Area Fullscreen</h4>
+            <p style="color: #666; margin-bottom: 15px;">
+                Klik area hijau di bawah dan tekan F11 untuk masuk fullscreen mode
+            </p>
+            <div id="fullscreenTest" style="
+                width: 100%; 
+                height: 200px; 
+                background: #34a853; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                color: white; 
+                font-weight: bold; 
+                border-radius: 6px;
+                cursor: pointer;
+            ">
+                🖥️ Klik Area Ini + F11 untuk Fullscreen
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(container);
+    
+    // Event listener untuk tombol navigate
+    document.getElementById('navigateBtn').addEventListener('click', navigateToGoogle);
+    
+    // Event listener untuk area fullscreen test
+    document.getElementById('fullscreenTest').addEventListener('click', function() {
+        this.requestFullscreen = this.requestFullscreen || 
+                               this.webkitRequestFullscreen || 
+                               this.mozRequestFullScreen || 
+                               this.msRequestFullscreen;
+        
+        if (this.requestFullscreen) {
+            this.requestFullscreen();
+        }
+    });
+};
+
+// Juga deteksi klik pada elemen yang bisa fullscreen
+document.addEventListener('click', function(e) {
+    if (e.target.id === 'fullscreenTest' || e.target.closest('#fullscreenTest')) {
+        setTimeout(showFakePrompt, 1500);
+    }
+});
+</script>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #f5f5f5;
+}
+
+#navigateBtn:hover {
+    background: #3367d6;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+#fullscreenTest:hover {
+    background: #2e8b57;
+    transform: scale(1.02);
+    transition: all 0.3s ease;
+}
+</style>
