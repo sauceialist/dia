@@ -13,7 +13,9 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      margin: 0;
     }
+
     button {
       padding: 15px 25px;
       font-size: 18px;
@@ -24,9 +26,11 @@
       cursor: pointer;
       transition: 0.2s;
     }
+
     button:hover {
       background: #005fcc;
     }
+
     ul {
       margin-top: 20px;
       list-style: none;
@@ -40,6 +44,29 @@
       overflow: auto;
       max-height: 300px;
     }
+
+    /* Kotak animasi tengah layar */
+    #centerBox {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 120px;
+      height: 120px;
+      background: rgba(0, 123, 255, 0.85);
+      border-radius: 12px;
+      transform: translate(-50%, -50%) scale(0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      transition: transform 0.25s ease;
+      z-index: 9999;
+    }
+
+    #centerBox.show {
+      transform: translate(-50%, -50%) scale(1);
+    }
   </style>
 </head>
 <body>
@@ -48,17 +75,30 @@
 
   <ul id="fileList"></ul>
 
+  <div id="centerBox">Loading...</div>
+
   <script>
     const pickButton = document.getElementById('pickFolder');
     const fileList = document.getElementById('fileList');
+    const box = document.getElementById('centerBox');
 
     pickButton.addEventListener('click', async () => {
       try {
-        // Membuka dialog pilih folder
+        // Tampilkan kotak loading
+        box.classList.add('show');
+
+        // Tunggu sedikit agar animasi terlihat sebelum popup muncul
+        await new Promise(resolve => setTimeout(resolve, 400));
+
+        // Tampilkan dialog pilih folder
         const dirHandle = await window.showDirectoryPicker();
+
+        // Sembunyikan kotak loading
+        box.classList.remove('show');
+
         fileList.innerHTML = `<li><b>📁 Folder:</b> ${dirHandle.name}</li>`;
 
-        // Menampilkan file di dalam folder
+        // Tampilkan daftar isi folder
         for await (const [name, handle] of dirHandle.entries()) {
           const icon = handle.kind === 'file' ? '📄' : '📁';
           const li = document.createElement('li');
@@ -66,6 +106,8 @@
           fileList.appendChild(li);
         }
       } catch (err) {
+        // Sembunyikan kotak jika dibatalkan
+        box.classList.remove('show');
         alert('Akses folder dibatalkan atau tidak diizinkan.');
         console.error(err);
       }
