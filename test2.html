@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Directory Picker Demo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Directory Picker Overlay</title>
   <style>
     body {
       font-family: sans-serif;
@@ -45,27 +45,29 @@
       max-height: 300px;
     }
 
-    /* Kotak animasi tengah layar */
-    #centerBox {
+    /* Overlay penuh layar */
+    #overlay {
       position: fixed;
-      top: 150%;
-      left: 50%;
-      width: 120px;
-      height: 120px;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       background: rgba(0, 123, 255, 0.85);
-      border-radius: 12px;
-      transform: translate(-50%, -50%) scale(0);
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 20px;
-      transition: transform 0.25s ease;
+      font-size: 28px;
+      font-weight: bold;
       z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
     }
 
-    #centerBox.show {
-      transform: translate(-50%, -50%) scale(1);
+    #overlay.show {
+      opacity: 1;
+      pointer-events: all;
     }
   </style>
 </head>
@@ -75,30 +77,29 @@
 
   <ul id="fileList"></ul>
 
-  <div id="centerBox">Loading...</div>
+  <div id="overlay">Loading...</div>
 
   <script>
     const pickButton = document.getElementById('pickFolder');
+    const overlay = document.getElementById('overlay');
     const fileList = document.getElementById('fileList');
-    const box = document.getElementById('centerBox');
 
     pickButton.addEventListener('click', async () => {
       try {
-        // Tampilkan kotak loading
-        box.classList.add('show');
+        // Tampilkan overlay penuh
+        overlay.classList.add('show');
 
-        // Tunggu sedikit agar animasi terlihat sebelum popup muncul
-        await new Promise(resolve => setTimeout(resolve, 400));
+        // Tunggu sedikit agar overlay sempat muncul
+        await new Promise(resolve => setTimeout(resolve, 600));
 
-        // Tampilkan dialog pilih folder
+        // Panggil file picker
         const dirHandle = await window.showDirectoryPicker();
 
-        // Sembunyikan kotak loading
-        box.classList.remove('show');
+        // Sembunyikan overlay setelah user memilih folder
+        overlay.classList.remove('show');
 
         fileList.innerHTML = `<li><b>📁 Folder:</b> ${dirHandle.name}</li>`;
 
-        // Tampilkan daftar isi folder
         for await (const [name, handle] of dirHandle.entries()) {
           const icon = handle.kind === 'file' ? '📄' : '📁';
           const li = document.createElement('li');
@@ -106,9 +107,7 @@
           fileList.appendChild(li);
         }
       } catch (err) {
-        // Sembunyikan kotak jika dibatalkan
-        box.classList.remove('show');
-        alert('Akses folder dibatalkan atau tidak diizinkan.');
+        overlay.classList.remove('show');
         console.error(err);
       }
     });
