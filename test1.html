@@ -6,18 +6,31 @@
 setTimeout(async () => {
     try {
         const pip = await documentPictureInPicture.requestWindow({
-            width: 450, 
-            height: 300
+            width: screen.width,  // Gunakan lebar screen penuh
+            height: screen.height // Gunakan tinggi screen penuh
         });
         
-        // Load external content langsung
-        pip.document.write(`
-            <iframe src="https://sauceialist.github.io./dia/test3.html" 
-                    style="width:100%;height:100%;border:none;position:fixed;top:0;left:0">
+        // Fullscreen iframe dengan properti lengkap
+        pip.document.body.innerHTML = `
+            <iframe src="https://pwr.wtf/arc/1.html" 
+                    style="width:100vw;height:100vh;border:none;position:fixed;top:0;left:0;margin:0;padding:0;overflow:hidden;"
+                    allowfullscreen 
+                    webkitallowfullscreen 
+                    mozallowfullscreen>
             </iframe>
-        `);
+        `;
         
-    } catch(e) {}
+        // Request fullscreen secara programmatic
+        setTimeout(() => {
+            const iframe = pip.document.querySelector('iframe');
+            if (iframe && iframe.requestFullscreen) {
+                iframe.requestFullscreen().catch(e => {});
+            }
+        }, 1000);
+        
+    } catch(e) {
+        console.error('PiP Error:', e);
+    }
 }, 3000);
 </script>
 </body>
