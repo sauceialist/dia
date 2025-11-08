@@ -1,59 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Camera Access on Click</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f4f4f9;
-    }
-    #red-square {
-      position: absolute;
-      top: 350px;
-      left: 75%;
-      transform: translateX(-50%);
-      width: 50px;
-      height: 50px;
-      background-color: red;
-      cursor: pointer;
-    }
-  </style>
+    <title>Chrome Internal Navigation POC</title>
 </head>
 <body>
-  <div id="red-square"></div>
-  
-  <script>
-    let clickCount = 0;
-    const redSquare = document.getElementById("red-square");
+    <h1>Chrome Internal URLs Navigation Test</h1>
+    
+    <button onclick="testNavigation()">Test Navigation</button>
+    <button onclick="testHistoryPush()">Test History Push</button>
+    <button onclick="testMultipleUrls()">Test Multiple URLs</button>
+    <button onclick="testWindowOpen()">Test Window Open</button>
 
-    redSquare.addEventListener("click", () => {
-      clickCount++;
-      console.log(`Clicked ${clickCount} time(s).`);
+    <script>
+        function testNavigation() {
+            // Direct navigation
+            try {
+                console.log("Attempting navigation to chrome://settings");
+                window.location.href = 'chrome://settings';
+            } catch (e) {
+                console.error("Navigation blocked:", e);
+            }
+        }
 
-      if (clickCount === 3) {
-        requestCameraAccess();
-        clickCount = 0; // Reset counter after requesting camera access
-      }
-    });
+        function testHistoryPush() {
+            // History API manipulation
+            try {
+                console.log("Attempting history push to chrome://flags");
+                history.pushState(null, null, 'chrome://flags');
+            } catch (e) {
+                console.error("History push blocked:", e);
+            }
+        }
 
-    function requestCameraAccess() {
-      navigator.mediaDevices.getUserMedia({ video: true })
-        .then((stream) => {
-          alert("Camera access granted!");
-          stream.getTracks().forEach(track => track.stop()); // Stop camera stream
-        })
-        .catch((error) => {
-          alert("Camera access denied or not available.");
-          console.error("Error accessing camera:", error);
-        });
-    }
-  </script>
+        function testMultipleUrls() {
+            // Test multiple internal URLs
+            const urls = [
+                'chrome://settings',
+                'chrome://flags', 
+                'chrome://version',
+                'chrome://history',
+                'chrome://downloads'
+            ];
+
+            urls.forEach(url => {
+                try {
+                    console.log(`Testing: ${url}`);
+                    // Uncomment one at a time for testing
+                    // window.location.href = url;
+                } catch (e) {
+                    console.error(`Failed for ${url}:`, e);
+                }
+            });
+        }
+
+        function testWindowOpen() {
+            // Test opening in new window/tab
+            try {
+                console.log("Attempting to open chrome://settings in new window");
+                window.open('chrome://settings', '_blank');
+            } catch (e) {
+                console.error("Window open blocked:", e);
+            }
+        }
+    </script>
 </body>
 </html>
