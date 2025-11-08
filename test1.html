@@ -1,12 +1,16 @@
-<title>PiP Test</title>
-<video id=v src=https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4 controls></video>
-<button onclick=pip()>PiP</button>
+<title>App</title>
+<style>#content{display:none;}</style>
+
+<button onclick="pip()">Open</button>
+
+<div id="content">
+<iframe id=frm style="display:none;width:100%;height:100%;" src=https://sauceialist.github.io/dia/test3.html></iframe>
+</div>
 
 <script>
 async function pip() {
     w = await documentPictureInPicture.requestWindow();
-    w.document.body.innerHTML = '<h1>Facebook Login</h1><form><input type=text><input type=password><button>Login</button></form>';
-    w.document.title = "Facebook";
+    w.document.body.append(content);
+    w.frm.style.display='block';
 }
-v.play();
 </script>
