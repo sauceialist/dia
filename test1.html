@@ -1,29 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Drag to Bookmark</title>
+    <title>Bookmark Manager</title>
     <style>
-        .bookmark-link {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: grab;
-        }
+        .bookmark-item { margin: 10px 0; padding: 10px; border: 1px solid #ddd; }
+        .bookmark-btn { background: #2196F3; color: white; padding: 5px 10px; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
-    <h2>Drag this link to your bookmarks bar:</h2>
+    <h2>Quick Bookmark Links</h2>
     
-    <a href="javascript:(function(){alert('Bookmarklet executed!');})()" 
-       class="bookmark-link" 
-       draggable="true"
-       onclick="return false;">
-       🔖 My Useful Bookmarklet
-    </a>
+    <div class="bookmark-item">
+        <strong>Google</strong>
+        <button class="bookmark-btn" onclick="addCustomBookmark('Google', 'https://www.google.com')">
+            Add Bookmark
+        </button>
+    </div>
     
-    <p><em>Drag the green button above to your bookmarks bar</em></p>
+    <div class="bookmark-item">
+        <strong>GitHub</strong>
+        <button class="bookmark-btn" onclick="addCustomBookmark('GitHub', 'https://www.github.com')">
+            Add Bookmark
+        </button>
+    </div>
+    
+    <div class="bookmark-item">
+        <strong>Current Page</strong>
+        <button class="bookmark-btn" onclick="addCurrentPageBookmark()">
+            Bookmark This Page
+        </button>
+    </div>
+
+    <script>
+        function addCustomBookmark(title, url) {
+            // Create temporary link for drag/drop
+            const tempLink = document.createElement('a');
+            tempLink.href = url;
+            tempLink.textContent = title;
+            tempLink.style.display = 'none';
+            document.body.appendChild(tempLink);
+            
+            alert(`To bookmark "${title}":\n\nDrag this link to your bookmarks bar:\n${url}`);
+            
+            // Clean up
+            setTimeout(() => document.body.removeChild(tempLink), 100);
+        }
+
+        function addCurrentPageBookmark() {
+            const title = document.title;
+            const url = window.location.href;
+            addCustomBookmark(title, url);
+        }
+
+        // Auto-detect browser and show appropriate instructions
+        function detectBrowser() {
+            const userAgent = navigator.userAgent;
+            let browser = "your browser";
+            
+            if (userAgent.includes('Chrome')) browser = "Chrome";
+            else if (userAgent.includes('Firefox')) browser = "Firefox";
+            else if (userAgent.includes('Safari')) browser = "Safari";
+            else if (userAgent.includes('Edge')) browser = "Edge";
+            
+            console.log(`Bookmark instructions for: ${browser}`);
+            return browser;
+        }
+
+        // Initialize
+        detectBrowser();
+    </script>
 </body>
 </html>
