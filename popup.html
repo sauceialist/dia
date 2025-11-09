@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { width: 300px; padding: 15px; }
+        .bookmark-form { display: flex; flex-direction: column; gap: 10px; }
+        input, button { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        button { background: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background: #45a049; }
+        .success { color: green; margin-top: 10px; }
+        .error { color: red; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="bookmark-form">
+        <h3>Add Bookmark</h3>
+        <input type="text" id="bookmarkTitle" placeholder="Bookmark name">
+        <input type="text" id="bookmarkUrl" placeholder="https://example.com">
+        <button id="addBookmarkBtn">Add to Bookmarks Bar</button>
+        <button id="addCurrentPage">Bookmark Current Page</button>
+        <div id="message"></div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
