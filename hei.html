@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<a href="https://google.com" onclick="myFunction()">click me to open google</a>
+
+<script>
+function myFunction() {
+    var x = window.open("https://www.google.com/csi", "_blank", "width=400,height=300");
+    
+    setTimeout(function() {
+    x.document.write(`
+        <div style="text-align: center; margin-top: 100px;">
+            <form action="https://www.google.com/search" method="GET" target="_blank">
+                <input type="text" name="q" placeholder="Cari di Google..." 
+                       style="padding: 10px; width: 300px; border: 1px solid #ddd; border-radius: 24px;">
+                <br><br>
+                <input type="submit" value="Cari Google" 
+                       style="padding: 8px 16px; background: #4285f4; color: white; border: none; border-radius: 4px;">
+            </form>
+        </div>
+    `);
+    x.document.close();
+}, 500);
+}
+</script>
+
+</body>
+</html>
